@@ -1,0 +1,4 @@
+interface:
+  display_name: "State Logging"
+  short_description: "Keep resumable state minimal and durable"
+  default_prompt: "Use $state-logging to initialize or update the task state for this issue."

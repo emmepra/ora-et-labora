@@ -1,11 +1,21 @@
 ---
 name: ora-et-labora
-description: Manage a repo-first issue-to-release workflow for Git/GitHub projects that use `.project/` as the execution surface. Use when Codex needs to shape work before implementation, run a mandatory blueprint fit check against existing project constraints, create or resume issue/worktree state, keep logs minimal but resumable, choose verification modalities based on the type of change, enforce browser verification with disciplined Playwright evidence for frontend-impacting work, open PRs to `dev`, prepare grouped releases from `dev` to `main`, or bootstrap repo templates for issues, PRs, blueprint docs, and workflow examples.
+description: Shared principles and resource library for the Ora et Labora repo-first workflow suite. Use when Codex needs the suite map, shared conventions, common templates/scripts, or a cross-phase reference for issue shaping, blueprint checks, state logging, worktree flow, verification evidence, release trains, or repo bootstrap.
 ---
 
 # ora-et-labora
 
-Use this skill to keep implementation work consistent from issue shaping through release.
+Use this skill as the suite index and shared reference surface.
+
+This is not the main operational trigger for most tasks. The primary workflow phases live in peer skills:
+
+- `issue-shaping`
+- `blueprint-guard`
+- `state-logging`
+- `worktree-flow`
+- `verify-and-evidence`
+- `release-train`
+- `repo-bootstrap`
 
 ## Core Policy
 
@@ -22,9 +32,26 @@ Use this skill to keep implementation work consistent from issue shaping through
 - Promote `dev` to `main` through grouped release PRs, not one `main` merge per implementation PR.
 - Render GitHub issue and PR bodies from files or templates. Do not assemble complex markdown inline in a shell command.
 
-## Artifact Model
+## Suite Map
 
-Use these surfaces with strict responsibilities:
+- `issue-shaping`
+  - own the challenge record and issue drafting flow
+- `blueprint-guard`
+  - own the blueprint fit check and blueprint-update decision
+- `state-logging`
+  - own `CURRENT.md`, resumable state, and delta-only logs
+- `worktree-flow`
+  - own branch naming, worktree lifecycle, Docker coexistence, and PRs to `dev`
+- `verify-and-evidence`
+  - own modality-based verification and browser evidence
+- `release-train`
+  - own grouped promotion from `dev` to `main`
+- `repo-bootstrap`
+  - own repo templates, GitHub defaults, and bootstrap flow
+
+## Shared Artifact Model
+
+Use these surfaces with strict responsibilities across the suite:
 
 - GitHub issue: problem statement, constraints, acceptance criteria, verification plan.
 - `.project/todo/<module-id>/00_brainstorm.md`: challenge record, feasibility notes, options, and the blueprint fit check.
@@ -39,7 +66,17 @@ Read [references/docker-worktrees.md](references/docker-worktrees.md) when the r
 Read [references/verification.md](references/verification.md) before deciding which checks are required and how browser evidence must be stored.
 Read [references/repo-bootstrap.md](references/repo-bootstrap.md) when bootstrapping a repo or applying templates.
 
-## Blueprint Rules
+## Shared References
+
+Read these files when a peer skill needs the deeper policy:
+
+- [references/workflow.md](references/workflow.md)
+- [references/blueprint-policy.md](references/blueprint-policy.md)
+- [references/docker-worktrees.md](references/docker-worktrees.md)
+- [references/verification.md](references/verification.md)
+- [references/repo-bootstrap.md](references/repo-bootstrap.md)
+
+## Shared Blueprint Rules
 
 - Mandatory fit check: yes.
 - Mandatory blueprint update on every issue: no.
@@ -48,7 +85,7 @@ Read [references/repo-bootstrap.md](references/repo-bootstrap.md) when bootstrap
 If the issue clearly fits the current blueprint, record the fit result in `00_brainstorm.md` and move on.
 If the blueprint blocks or contradicts the issue, stop and surface the conflict before implementation.
 
-## Branching And Release Rules
+## Shared Branching And Release Rules
 
 - Preferred branch names:
   - `feat/<issue>-<slug>`
@@ -67,7 +104,7 @@ If the blueprint blocks or contradicts the issue, stop and surface the conflict 
 - Parallel worktree stacks are allowed only when the repo has explicit per-worktree isolation for compose project name, ports, and service/container naming.
 - Do not leave Docker runtime conventions implicit. Durable local-runtime rules belong in `.project/blueprint/`.
 
-## Logging Rules
+## Shared Logging Rules
 
 Only append to the task log when one of these changed:
 
@@ -82,7 +119,7 @@ Do not log every command, edit, or micro-commit.
 Use [assets/templates/current.md](assets/templates/current.md) for resumable state.
 Use [assets/templates/log.md](assets/templates/log.md) for the append-only log shape.
 
-## Verification Rules
+## Shared Verification Rules
 
 - Pick verification modalities from the change surface:
   - docs/process-only: spellcheck, lint, structural validation as needed
@@ -93,19 +130,7 @@ Use [assets/templates/log.md](assets/templates/log.md) for the append-only log s
 - Record only the latest meaningful verification result in `CURRENT.md` and the task log.
 - Keep large browser artifacts out of ad hoc temp folders once they matter to the task outcome.
 
-## Task Flow
-
-1. Resolve repo root and read the closest `AGENTS.md`.
-2. Run the blueprint fit check for the issue and capture it in `00_brainstorm.md`.
-3. Shape or refine the GitHub issue using a rendered template.
-4. Create the branch/worktree and initialize `.project/todo/<module-id>/` plus `.project/logs/<module-id>.md`.
-5. Implement.
-6. Verify.
-7. Open or update the PR into `dev`.
-8. Record only meaningful deltas.
-9. When a release is requested, prepare a grouped `dev` -> `main` release PR.
-
-## Scripts
+## Shared Resources
 
 - `scripts/render_template.py`
   - Render markdown bodies from template files with strict placeholder checking.

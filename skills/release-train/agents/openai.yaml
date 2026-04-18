@@ -1,0 +1,4 @@
+interface:
+  display_name: "Release Train"
+  short_description: "Promote grouped work from dev to main"
+  default_prompt: "Use $release-train to prepare the grouped release PR from dev to main."

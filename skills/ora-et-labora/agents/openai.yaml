@@ -1,4 +1,6 @@
 interface:
   display_name: "Ora et Labora"
   short_description: "Issue-to-release workflow for repo work"
-  default_prompt: "Use $ora-et-labora to run this repo task from issue shaping through release with minimal logging and explicit verification."
+  default_prompt: "Use $ora-et-labora to identify which Ora et Labora workflow skills apply to this repo task and which shared resources to use."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Issue Shaping"
+  short_description: "Shape bugs and features before implementation"
+  default_prompt: "Use $issue-shaping to turn this rough request into a clean issue and brainstorm file."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Worktree Flow"
+  short_description: "Own branches, worktrees, Docker, and PR-to-dev"
+  default_prompt: "Use $worktree-flow to set up the branch/worktree and manage the PR flow into dev."

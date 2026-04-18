@@ -1,10 +1,10 @@
 # Ora et Labora
 
-Ora et Labora is a repo-first workflow skill for coding agents.
+Ora et Labora is a repo-first workflow suite for coding agents.
 
 It is not a bag of prompts. It is a working method for taking nontrivial software changes from rough idea to stable release without relying on agent memory or ad hoc habits.
 
-The skill is built around a simple idea:
+The suite is built around a simple idea:
 
 - shape the work before coding
 - check the work against the project blueprint
@@ -68,26 +68,60 @@ The branch flow is PR-first into `dev`, while stable promotion happens through g
 ## What’s Inside
 
 ```text
-skills/ora-et-labora/   installable Codex skill
-tests/                  script-level validation
+skills/ora-et-labora/       shared principles, suite map, shared resources
+skills/issue-shaping/       challenge record and issue drafting
+skills/blueprint-guard/     blueprint fit check and durable blueprint updates
+skills/state-logging/       CURRENT.md and delta-only task log discipline
+skills/worktree-flow/       branch naming, worktrees, PR-to-dev, Docker rules
+skills/verify-and-evidence/ modality-based verification and Playwright evidence
+skills/release-train/       grouped dev-to-main release flow
+skills/repo-bootstrap/      repo templates and GitHub defaults/bootstrap
+tests/                      script-level validation
 ```
 
-The skill includes:
+The suite includes:
 
-- a core workflow spec
-- blueprint, verification, and Docker/worktree policy references
+- a shared workflow spec and reference library under `skills/ora-et-labora`
+- focused trigger skills for each major workflow phase
 - issue, PR, release, brainstorm, current-state, and log templates
 - bootstrap assets for `.github/` and `.project/blueprint/`
 - helper scripts for template rendering, issue workspace initialization, and Playwright artifact collection
 
+## Skill Roles
+
+- `ora-et-labora`
+  - shared philosophy, operating model, and reusable resources
+  - lightweight umbrella skill, not the main phase trigger
+- `issue-shaping`
+  - turns rough ideas into challenge records and clean GitHub issues
+- `blueprint-guard`
+  - checks feasibility against `.project/blueprint/` and decides when blueprint updates are mandatory
+- `state-logging`
+  - keeps resumable state minimal and durable after context compaction
+- `worktree-flow`
+  - owns branch naming, worktree lifecycle, Docker coexistence, and PRs into `dev`
+- `verify-and-evidence`
+  - chooses verification modalities and stores browser evidence correctly
+- `release-train`
+  - prepares grouped `dev` to `main` release PRs
+- `repo-bootstrap`
+  - applies workflow templates and bootstraps repo conventions
+
 ## Install
 
-Install the skill from this repo path:
+Install the full suite from this repo:
 
 ```bash
 python ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
   --repo emmepra/ora-et-labora \
-  --path skills/ora-et-labora
+  --path skills/ora-et-labora \
+  --path skills/issue-shaping \
+  --path skills/blueprint-guard \
+  --path skills/state-logging \
+  --path skills/worktree-flow \
+  --path skills/verify-and-evidence \
+  --path skills/release-train \
+  --path skills/repo-bootstrap
 ```
 
 Restart Codex after installation so the skill is discovered.
@@ -107,3 +141,5 @@ Validate the skill shape:
 python ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py \
   ../skills/ora-et-labora
 ```
+
+Repeat for the other skill folders when editing them directly.

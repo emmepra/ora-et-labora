@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repo Bootstrap"
+  short_description: "Bootstrap repos for the Ora et Labora workflow"
+  default_prompt: "Use $repo-bootstrap to apply the workflow templates and branch model to this repository."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verify and Evidence"
+  short_description: "Choose checks and store durable verification evidence"
+  default_prompt: "Use $verify-and-evidence to decide the checks for this change and capture the evidence cleanly."
