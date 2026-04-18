@@ -1,11 +1,11 @@
 ---
 name: ora-et-labora
-description: Shared principles and resource library for the Ora et Labora repo-first workflow suite. Use when Codex needs the suite map, shared conventions, common templates/scripts, or a cross-phase reference for issue shaping, blueprint checks, state logging, worktree flow, verification evidence, release trains, or repo bootstrap.
+description: Shared principles and suite map for the Ora et Labora repo-first workflow suite. Use when Codex needs the suite map, shared conventions, common templates/scripts, or a cross-phase overview for issue shaping, blueprint checks, state logging, worktree flow, verification evidence, release trains, or repo bootstrap.
 ---
 
 # ora-et-labora
 
-Use this skill as the suite index and shared reference surface.
+Use this skill as the suite index and shared overview.
 
 This is not the main operational trigger for most tasks. The primary workflow phases live in peer skills:
 
@@ -59,22 +59,6 @@ Use these surfaces with strict responsibilities across the suite:
 - `.project/logs/<module-id>.md`: meaningful deltas only.
 - Pull request: implementation summary, verification evidence, risk/rollback notes, blueprint changes.
 - Release PR: grouped promotion from `dev` to `main`.
-
-Read [references/workflow.md](references/workflow.md) for the state model and artifact boundaries.
-Read [references/blueprint-policy.md](references/blueprint-policy.md) before deciding whether `.project/blueprint/` must change.
-Read [references/docker-worktrees.md](references/docker-worktrees.md) when the repo uses Docker or Compose and multiple worktrees may run locally.
-Read [references/verification.md](references/verification.md) before deciding which checks are required and how browser evidence must be stored.
-Read [references/repo-bootstrap.md](references/repo-bootstrap.md) when bootstrapping a repo or applying templates.
-
-## Shared References
-
-Read these files when a peer skill needs the deeper policy:
-
-- [references/workflow.md](references/workflow.md)
-- [references/blueprint-policy.md](references/blueprint-policy.md)
-- [references/docker-worktrees.md](references/docker-worktrees.md)
-- [references/verification.md](references/verification.md)
-- [references/repo-bootstrap.md](references/repo-bootstrap.md)
 
 ## Shared Blueprint Rules
 

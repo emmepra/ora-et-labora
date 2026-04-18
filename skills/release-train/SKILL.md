@@ -7,6 +7,10 @@ description: Manage grouped promotion from `dev` to `main`. Use when Codex needs
 
 Use this skill when the work is moving from `dev` to `main`.
 
+## Overview
+
+Prepare grouped promotion from the integration branch to the stable branch.
+
 ## Responsibilities
 
 - prepare grouped `dev` to `main` release PRs
@@ -20,15 +24,29 @@ Use this skill when the work is moving from `dev` to `main`.
 - stable promotion happens in grouped release PRs
 - release PRs must summarize scope, checks, and rollback
 
-## Resources
-
-- use `../ora-et-labora/assets/templates/release-pr.md`
-- read `../ora-et-labora/references/workflow.md`
-- read `../ora-et-labora/references/verification.md`
-
-## Checks
+## Release Checks
 
 - regression suite
 - browser status when frontend work is included
-- migration/schema status if relevant
+- migration or schema status if relevant
 - CI status
+
+## Required Output
+
+A release PR should summarize:
+
+- release scope
+- included PRs or grouped changes
+- release checks
+- notes
+- rollback plan
+
+## Resources
+
+- use `../ora-et-labora/assets/templates/release-pr.md`
+
+## Common Mistakes
+
+- promoting individual implementation PRs directly to `main`
+- forgetting rollback notes
+- using stale verification status that no longer reflects current `dev`

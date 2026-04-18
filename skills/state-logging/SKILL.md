@@ -7,6 +7,10 @@ description: Maintain minimal but durable execution state for nontrivial work. U
 
 Use this skill whenever a task has enough scope to need resumable state.
 
+## Overview
+
+Keep execution state minimal, durable, and resumable after context compaction.
+
 ## Responsibilities
 
 - initialize branch-local task state
@@ -21,12 +25,22 @@ Use this skill whenever a task has enough scope to need resumable state.
 - the task log is append-only, but only for meaningful deltas
 - do not log every command, edit, or commit
 
+## Source Of Truth
+
+Use one source of truth per concern:
+
+- GitHub issue: issue scope and acceptance criteria
+- `00_brainstorm.md`: design tradeoffs and feasibility
+- `CURRENT.md`: current resumable state
+- task log: history worth remembering
+- PR: implementation and verification summary
+- release PR: promotion to stable
+
 ## Resources
 
 - use `../ora-et-labora/scripts/init_issue_workspace.py`
 - use `../ora-et-labora/assets/templates/current.md`
 - use `../ora-et-labora/assets/templates/log.md`
-- read `../ora-et-labora/references/workflow.md`
 
 ## Meaningful Deltas
 
@@ -35,3 +49,9 @@ Use this skill whenever a task has enough scope to need resumable state.
 - verification result changed
 - PR state changed
 - release state changed
+
+## Common Mistakes
+
+- duplicating issue text into `CURRENT.md`
+- treating the task log like a command transcript
+- storing historical notes in `CURRENT.md` instead of the log

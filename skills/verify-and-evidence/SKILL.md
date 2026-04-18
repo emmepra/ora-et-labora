@@ -7,6 +7,10 @@ description: Choose verification modalities based on the change surface and stor
 
 Use this skill before claiming the work is done.
 
+## Overview
+
+Choose the right verification modalities for the change and store durable evidence for the checks that matter.
+
 ## Responsibilities
 
 - choose the right verification modalities
@@ -21,15 +25,63 @@ Use this skill before claiming the work is done.
 - keep large artifacts in `.project/logs/playwright/<module-id>/<run-id>/`
 - record the verdict and evidence path, not raw artifact dumps, in logs and PRs
 
+## Modality Matrix
+
+- docs/process-only:
+  - markdown or schema validation
+  - formatting or lint checks
+  - link or structural checks when relevant
+- backend/API:
+  - unit tests
+  - integration tests
+  - contract checks
+  - migration or data-shape checks
+  - direct probing for critical endpoints or CLI paths when needed
+- frontend/UI:
+  - local build and static checks
+  - component or unit tests if the repo supports them
+  - browser verification for user-visible behavior
+- cross-stack:
+  - combine the backend and frontend modalities that apply
+
+## Browser Evidence Policy
+
+For browser verification, treat artifacts as durable evidence when they support a fix, a claim, or a PR.
+
+Store them under:
+
+`.project/logs/playwright/<module-id>/<run-id>/`
+
+Recommended contents:
+
+- `manifest.json`
+- `summary.md`
+- `trace.zip` when available
+- `video.webm` when available
+- `screenshot-*.png` for key visual states
+- `stdout.log` or exported command output when useful
+
+## Logging Rule
+
+Do not paste large artifact details into `CURRENT.md` or the task log.
+
+Instead:
+
+- record the verdict
+- record the run ID or path
+- record only the specific evidence needed to justify the state change
+
+## CI Expectation
+
+If the project supports browser automation in CI, PRs affecting frontend behavior should have at least a smoke-level browser gate in CI, even when the primary evidence was gathered locally.
+
 ## Resources
 
-- read `../ora-et-labora/references/verification.md`
 - use `../ora-et-labora/scripts/collect_playwright_artifacts.py`
 - use `../ora-et-labora/assets/templates/pr.md`
 
-## Modalities
+## Common Mistakes
 
-- docs/process: structural checks as needed
-- backend/API: unit, integration, contract, migration, probing as needed
-- frontend/UI: build/static checks plus browser verification
-- cross-stack: combine the relevant modalities
+- treating browser verification as optional for frontend behavior changes
+- claiming a fix without durable evidence
+- dumping raw artifact noise into logs or PRs instead of a clean verdict and path

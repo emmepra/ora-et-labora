@@ -84,7 +84,7 @@ tests/                      script-level validation
 
 The suite includes:
 
-- a shared workflow spec and reference library under `skills/ora-et-labora`
+- a shared workflow overview under `skills/ora-et-labora`
 - focused trigger skills for each major workflow phase
 - issue, PR, release, brainstorm, current-state, and log templates
 - bootstrap assets for `.github/` and `.project/blueprint/`
