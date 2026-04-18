@@ -86,9 +86,12 @@ The suite includes:
 
 - a shared workflow overview under `skills/ora-et-labora`
 - focused trigger skills for each major workflow phase
+- detailed self-contained `SKILL.md` bodies with procedure, red flags, rationalization counters, and completion checklists
 - issue, PR, release, brainstorm, current-state, and log templates
 - bootstrap assets for `.github/` and `.project/blueprint/`
 - helper scripts for template rendering, issue workspace initialization, and Playwright artifact collection
+
+The operating procedure is intentionally inline in the skill files. Extra files are reserved for templates, scripts, bootstrap assets, tests, and examples.
 
 ## Skill Roles
 

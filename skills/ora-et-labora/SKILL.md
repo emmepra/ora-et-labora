@@ -1,21 +1,73 @@
 ---
 name: ora-et-labora
-description: Shared principles and suite map for the Ora et Labora repo-first workflow suite. Use when Codex needs the suite map, shared conventions, common templates/scripts, or a cross-phase overview for issue shaping, blueprint checks, state logging, worktree flow, verification evidence, release trains, or repo bootstrap.
+description: Use when a repo task needs the Ora et Labora suite map, shared artifact model, skill selection guidance, or template/script locations.
 ---
 
 # ora-et-labora
 
-Use this skill as the suite index and shared overview.
+Use this skill as the suite index and shared operating model.
 
-This is not the main operational trigger for most tasks. The primary workflow phases live in peer skills:
+This is not the main execution skill for most tasks. The focused peer skills own the actual workflow phases. Use this skill to decide which phase skill applies, to understand the artifact model, or to find suite templates and scripts.
 
-- `issue-shaping`
-- `blueprint-guard`
-- `state-logging`
-- `worktree-flow`
-- `verify-and-evidence`
-- `release-train`
-- `repo-bootstrap`
+## Overview
+
+Ora et Labora is a repo-first workflow for agentic software development. It turns rough work into durable issues, checks feasibility against the project blueprint, executes in a branch worktree, verifies with the right modality, opens PRs into `dev`, and promotes grouped releases to `main`.
+
+Core principle: important workflow state must live in the repo, not in agent memory.
+
+The suite intentionally keeps operative guidance inside each `SKILL.md`. Shared reusable materials are scripts and templates, not hidden procedure docs.
+
+## When To Use This Skill
+
+Use this umbrella skill when:
+
+- the user asks what Ora et Labora does
+- a request could match multiple Ora et Labora skills
+- the agent needs the suite map
+- the agent needs the artifact ownership model
+- the agent needs to locate templates or helper scripts
+- the task spans issue shaping, worktree flow, verification, and release
+
+Do not use this skill as a substitute for the detailed phase skills. If the task clearly belongs to one phase, use that phase skill.
+
+## Suite Skills
+
+| Skill | Use when |
+| --- | --- |
+| `issue-shaping` | a rough bug, feature, refactor, or workflow request needs a durable challenge record or GitHub issue body |
+| `blueprint-guard` | a shaped issue needs a fit check against `.project/blueprint/` or durable project knowledge may need updating |
+| `state-logging` | work needs `CURRENT.md`, task logs, compaction recovery, or delta-only state discipline |
+| `worktree-flow` | creating/resuming task branches, worktrees, rebasing, Docker worktree runtime, or PRs into `dev` |
+| `verify-and-evidence` | choosing and recording tests, browser verification, Playwright evidence, CI status, or PR readiness |
+| `release-train` | promoting grouped work from `dev` to `main`, release PRs, release checks, and rollback notes |
+| `repo-bootstrap` | initializing repo templates, `.project/blueprint/`, branch defaults, CI/release placeholders, and GitHub settings |
+
+## End-To-End Lifecycle
+
+1. Shape the issue.
+   - Use `issue-shaping`.
+   - Produce a challenge record and issue body.
+2. Check blueprint fit.
+   - Use `blueprint-guard`.
+   - Record fit, assumptions, conflicts, and blueprint update decision.
+3. Initialize state.
+   - Use `state-logging`.
+   - Create or update `CURRENT.md` and the task log.
+4. Start implementation branch.
+   - Use `worktree-flow`.
+   - Create/reuse a worktree, branch from `dev`, and keep PR target as `dev`.
+5. Verify.
+   - Use `verify-and-evidence`.
+   - Select checks by change surface and preserve browser evidence when relevant.
+6. Open or update implementation PR.
+   - Use `worktree-flow`, `state-logging`, and `verify-and-evidence`.
+   - Render PR body from a file or template.
+7. Release.
+   - Use `release-train`.
+   - Promote grouped `dev` work to `main` with release checks and rollback notes.
+8. Bootstrap new repos.
+   - Use `repo-bootstrap`.
+   - Apply templates, blueprint docs, branch defaults, and GitHub setting plan.
 
 ## Core Policy
 
@@ -32,109 +84,133 @@ This is not the main operational trigger for most tasks. The primary workflow ph
 - Promote `dev` to `main` through grouped release PRs, not one `main` merge per implementation PR.
 - Render GitHub issue and PR bodies from files or templates. Do not assemble complex markdown inline in a shell command.
 
-## Suite Map
+## Artifact Ownership
 
-- `issue-shaping`
-  - own the challenge record and issue drafting flow
-- `blueprint-guard`
-  - own the blueprint fit check and blueprint-update decision
-- `state-logging`
-  - own `CURRENT.md`, resumable state, and delta-only logs
-- `worktree-flow`
-  - own branch naming, worktree lifecycle, Docker coexistence, and PRs to `dev`
-- `verify-and-evidence`
-  - own modality-based verification and browser evidence
-- `release-train`
-  - own grouped promotion from `dev` to `main`
-- `repo-bootstrap`
-  - own repo templates, GitHub defaults, and bootstrap flow
+| Artifact | Owns | Should not contain |
+| --- | --- | --- |
+| GitHub issue | problem, scope, constraints, acceptance criteria, verification plan | command logs, branch status, implementation diary |
+| `00_brainstorm.md` | challenge record, assumptions, options, risks, blueprint fit | PR status, raw command output |
+| `CURRENT.md` | current status, branch, PR, latest verification, next step, blockers | historical diary, full issue body, raw artifacts |
+| task log | meaningful deltas and state transitions | every command, every edit, repeated issue text |
+| `.project/blueprint/` | durable project model and workflow invariants | task-local notes, transient blockers |
+| PR body | implementation summary, verification evidence, risks, rollback/follow-ups | unresolved template placeholders, raw traces |
+| release PR | grouped scope, release checks, migrations, rollback | individual implementation diaries |
 
-## Shared Artifact Model
+## Nontrivial Work Definition
 
-Use these surfaces with strict responsibilities across the suite:
+Treat work as nontrivial when any of these are true:
 
-- GitHub issue: problem statement, constraints, acceptance criteria, verification plan.
-- `.project/todo/<module-id>/00_brainstorm.md`: challenge record, feasibility notes, options, and the blueprint fit check.
-- `.project/todo/<module-id>/CURRENT.md`: current resumable state only.
-- `.project/logs/<module-id>.md`: meaningful deltas only.
-- Pull request: implementation summary, verification evidence, risk/rollback notes, blueprint changes.
-- Release PR: grouped promotion from `dev` to `main`.
+- it deserves a GitHub issue
+- it touches multiple files or subsystems
+- it changes user-visible behavior
+- it changes API, schema, Docker, CI, release, auth, or deployment behavior
+- it requires browser verification
+- it may need a PR
+- it should survive context compaction
 
-## Shared Blueprint Rules
+Trivial work can skip the full lifecycle, but the decision should be explicit.
 
-- Mandatory fit check: yes.
+## Blueprint Rules
+
+- Mandatory fit check for nontrivial work: yes.
 - Mandatory blueprint update on every issue: no.
-- Mandatory blueprint update when architecture, contracts, environment assumptions, verification policy, release policy, or workflow invariants changed: yes.
+- Mandatory blueprint update when durable project knowledge changed: yes.
 
-If the issue clearly fits the current blueprint, record the fit result in `00_brainstorm.md` and move on.
-If the blueprint blocks or contradicts the issue, stop and surface the conflict before implementation.
+Durable project knowledge includes architecture boundaries, contracts, environment assumptions, CI/testing policy, Docker worktree rules, branch policy, release policy, and persistent operational invariants.
 
-## Shared Branching And Release Rules
+## Branch And Release Rules
 
 - Preferred branch names:
   - `feat/<issue>-<slug>`
   - `fix/<issue>-<slug>`
   - `chore/<issue>-<slug>`
   - `hotfix/<issue>-<slug>`
-- Prefer worktree folder names without slashes, such as `fix-123-login-race`.
-- Treat `dev` as the integration branch.
-- Treat `main` as the stable branch.
-- Release by opening a grouped `dev` -> `main` PR with release notes and release checks.
+- Preferred worktree folder names avoid slashes, such as `fix-123-login-race`.
+- `dev` is the integration branch.
+- `main` is the stable branch.
+- implementation PRs target `dev`.
+- release PRs promote grouped `dev` changes to `main`.
 
-## Docker And Worktrees
+## Docker And Runtime Rules
 
-- Default mode: one active Docker or Compose stack across worktrees.
-- If switching worktrees in default mode, bring the current stack down before bringing the next one up.
-- Parallel worktree stacks are allowed only when the repo has explicit per-worktree isolation for compose project name, ports, and service/container naming.
-- Do not leave Docker runtime conventions implicit. Durable local-runtime rules belong in `.project/blueprint/`.
+- Default to one active Docker or Compose stack across worktrees.
+- If switching worktrees, bring the current stack down before bringing the next stack up.
+- Parallel stacks require isolated Compose project names, ports, env files/overrides, and service/container naming.
+- After pull, rebase, or merge sync, rebuild or restart affected services before validating runtime behavior.
+- Do not trust stale containers, stale dev servers, or old browser tabs as evidence of current behavior.
 
-## Shared Logging Rules
+## Verification Rules
 
-Only append to the task log when one of these changed:
+- Docs/process-only work needs structural checks if available.
+- Backend/API work needs the relevant unit, integration, contract, migration, or direct probe checks.
+- Frontend/UI work needs build/static checks plus browser verification.
+- Cross-stack work needs the backend and frontend modalities that apply.
+- Browser evidence belongs under `.project/logs/playwright/<module-id>/<run-id>/`.
+- Record verification verdicts and evidence paths, not raw artifact dumps.
 
-- chosen approach
-- known blocker
-- verification result
-- PR state
-- release state
+## Markdown Body Rules
 
-Do not log every command, edit, or micro-commit.
+Use templates and body files for complex GitHub markdown.
 
-Use [assets/templates/current.md](assets/templates/current.md) for resumable state.
-Use [assets/templates/log.md](assets/templates/log.md) for the append-only log shape.
+Use:
 
-## Shared Verification Rules
+- `gh issue create --body-file <file>`
+- `gh pr create --body-file <file>`
 
-- Pick verification modalities from the change surface:
-  - docs/process-only: spellcheck, lint, structural validation as needed
-  - backend/API: unit, integration, contract, migration, and CLI/API probing as needed
-  - frontend/UI: browser verification plus relevant unit/build checks
-  - cross-stack changes: combine the relevant backend and frontend modalities
-- For browser verification, collect evidence under `.project/logs/playwright/<module-id>/<run-id>/`.
-- Record only the latest meaningful verification result in `CURRENT.md` and the task log.
-- Keep large browser artifacts out of ad hoc temp folders once they matter to the task outcome.
+Avoid:
 
-## Shared Resources
+- long inline markdown in shell strings
+- unresolved placeholders
+- hand-built PR bodies with inconsistent sections
 
-- `scripts/render_template.py`
-  - Render markdown bodies from template files with strict placeholder checking.
-- `scripts/init_issue_workspace.py`
-  - Create `00_brainstorm.md`, `CURRENT.md`, and the initial task log for a new issue/module.
-- `scripts/bootstrap_repo_templates.py`
-  - Copy issue/PR templates, blueprint docs, and workflow examples into a target repo.
-- `scripts/collect_playwright_artifacts.py`
-  - Store browser verification evidence in a stable repo-local log layout with a machine-readable manifest.
+## Reusable Templates
 
-## Template Assets
+Template assets live under `assets/templates/`:
 
-Use these assets rather than rewriting structure each time:
+- `issue-bug.md`
+- `issue-feature.md`
+- `pr.md`
+- `release-pr.md`
+- `brainstorm.md`
+- `current.md`
+- `log.md`
 
-- `assets/templates/issue-bug.md`
-- `assets/templates/issue-feature.md`
-- `assets/templates/pr.md`
-- `assets/templates/release-pr.md`
-- `assets/templates/brainstorm.md`
-- `assets/templates/current.md`
-- `assets/templates/log.md`
+Use these rather than recreating structure from memory.
 
-For repo bootstrap, use the files under `assets/bootstrap/`.
+## Reusable Scripts
+
+Scripts live under `scripts/`:
+
+- `render_template.py`: render markdown templates with strict placeholder replacement.
+- `init_issue_workspace.py`: initialize `00_brainstorm.md`, `CURRENT.md`, and task log.
+- `bootstrap_repo_templates.py`: copy GitHub templates, blueprint docs, and workflow examples into a target repo.
+- `collect_playwright_artifacts.py`: collect browser verification artifacts into `.project/logs/playwright/<module-id>/<run-id>/`.
+
+Prefer scripts for deterministic file layout and template rendering.
+
+## Red Flags - Suite Misuse
+
+- "I will remember this in chat instead of writing repo state."
+- "I will skip the blueprint check because the issue is obvious."
+- "I will use one log file for every branch."
+- "I will open a PR to `main` for normal feature work."
+- "I will claim frontend verification without browser evidence."
+- "I will paste complex markdown directly into `gh issue create`."
+- "I will use parallel Docker stacks without isolated ports and project names."
+
+All of these mean the suite is being bypassed.
+
+## Completion Standard
+
+For any nontrivial task, completion requires:
+
+- issue contract shaped
+- blueprint fit checked
+- branch-local state initialized
+- work performed in the owning worktree
+- relevant verification completed
+- browser evidence preserved when frontend behavior changed
+- PR opened or updated against `dev`
+- task state and log reflect the latest truth
+
+If any item is intentionally skipped, state why.
