@@ -1,4 +1,0 @@
-interface:
-  display_name: "Project Lifecycle"
-  short_description: "Issue-to-release workflow for repo work"
-  default_prompt: "Use $project-lifecycle to run this repo task from issue shaping through release with minimal logging and explicit verification."

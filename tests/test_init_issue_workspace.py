@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = REPO_ROOT / "skills" / "project-lifecycle" / "scripts" / "init_issue_workspace.py"
+SCRIPT = REPO_ROOT / "skills" / "ora-et-labora" / "scripts" / "init_issue_workspace.py"
 
 
 class InitIssueWorkspaceTests(unittest.TestCase):

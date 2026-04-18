@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = REPO_ROOT / "skills" / "project-lifecycle" / "scripts" / "collect_playwright_artifacts.py"
+SCRIPT = REPO_ROOT / "skills" / "ora-et-labora" / "scripts" / "collect_playwright_artifacts.py"
 
 
 class CollectPlaywrightArtifactsTests(unittest.TestCase):

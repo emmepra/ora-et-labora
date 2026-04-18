@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = REPO_ROOT / "skills" / "project-lifecycle" / "scripts" / "render_template.py"
+SCRIPT = REPO_ROOT / "skills" / "ora-et-labora" / "scripts" / "render_template.py"
 
 
 class RenderTemplateTests(unittest.TestCase):

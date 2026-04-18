@@ -1,9 +1,9 @@
 ---
-name: project-lifecycle
+name: ora-et-labora
 description: Manage a repo-first issue-to-release workflow for Git/GitHub projects that use `.project/` as the execution surface. Use when Codex needs to shape work before implementation, run a mandatory blueprint fit check against existing project constraints, create or resume issue/worktree state, keep logs minimal but resumable, choose verification modalities based on the type of change, enforce browser verification with disciplined Playwright evidence for frontend-impacting work, open PRs to `dev`, prepare grouped releases from `dev` to `main`, or bootstrap repo templates for issues, PRs, blueprint docs, and workflow examples.
 ---
 
-# project-lifecycle
+# ora-et-labora
 
 Use this skill to keep implementation work consistent from issue shaping through release.
 
