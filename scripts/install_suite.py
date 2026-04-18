@@ -17,6 +17,7 @@ SKILL_PATHS = [
     "skills/worktree-flow",
     "skills/verify-and-evidence",
     "skills/release-train",
+    "skills/repo-init",
     "skills/repo-bootstrap",
 ]
 

@@ -1,25 +1,26 @@
 ---
 name: repo-bootstrap
-description: Use when initializing a repository for Ora et Labora conventions, adding workflow templates, setting branch defaults, preparing CI/release placeholders, or documenting `.project/blueprint/`.
+description: Use when an existing repository needs Ora et Labora workflow files, `.project/blueprint/`, issue/PR templates, CI/release placeholders, or documented branch/runtime conventions.
 ---
 
 # repo-bootstrap
 
-Use this skill when a repository needs the Ora et Labora workflow structure applied for the first time or repaired after drifting.
+Use this skill when an existing repository needs the Ora et Labora workflow structure applied for the first time or repaired after drifting.
 
 ## Overview
 
-Repo bootstrap makes the workflow visible in files and repository settings. A project should not depend on an agent remembering branch rules, issue formats, PR formats, browser evidence paths, Docker worktree behavior, or release policy.
+Repo bootstrap makes the workflow visible in files and repository settings for a repo that already exists locally or remotely. A project should not depend on an agent remembering branch rules, issue formats, PR formats, browser evidence paths, Docker worktree behavior, or release policy.
 
 Core principle: bootstrap creates durable project surfaces, not just documentation about the skill suite.
 
 This skill is self-contained. Follow this file for the repo bootstrap procedure.
 
+Use `repo-init` instead when the GitHub repository itself still needs to be created.
+
 ## When To Use
 
 Use this skill when:
 
-- creating a new project repo
 - adding Ora et Labora workflow conventions to an existing repo
 - adding issue templates, PR templates, CI placeholders, release placeholders, or `.project/blueprint/`
 - setting `dev` as default and `main` as stable
@@ -29,6 +30,8 @@ Use this skill when:
 
 Do not use this skill when:
 
+- the GitHub repo does not exist yet; use `repo-init`
+- the user needs to choose owner/org, visibility, repo type, or source mode; use `repo-init`
 - the user only wants a single issue shaped
 - the repo already has a stronger local workflow and the user has not asked to change it
 - applying templates would overwrite project-specific files without review
@@ -40,7 +43,7 @@ Do not use this skill when:
 - create or update `.project/blueprint/` baseline files
 - prepare CI and release workflow placeholders
 - document branch and release model
-- identify GitHub settings that must be applied after initial push
+- identify GitHub settings that must be applied to the existing remote
 - avoid overwriting existing project-specific conventions without explicit approval
 
 ## Quick Reference
@@ -82,7 +85,7 @@ Do not use this skill when:
    - Browser evidence path.
    - Docker worktree runtime rules.
    - Release flow from `dev` to `main`.
-6. Apply GitHub defaults after remote exists.
+6. Apply GitHub defaults when a remote is present and the user approved settings changes.
    - Ensure `dev` exists.
    - Ensure `main` exists.
    - Set default branch to `dev`.
@@ -109,7 +112,7 @@ Target state:
 Typical CLI operations after the remote exists:
 
 ```bash
-gh repo edit --default-branch dev
+gh repo edit OWNER/REPO --default-branch dev
 ```
 
 Branch protection and rulesets may require `gh api` or repository settings automation. Do not pretend they were configured if only templates were copied.
@@ -178,6 +181,7 @@ For frontend-capable repos, bootstrap should document:
 ## Red Flags - Stop Bootstrap
 
 - existing project workflow conflicts with Ora et Labora and the user has not approved migration
+- the user actually needs a new repository created, not an existing repository bootstrapped
 - templates would overwrite meaningful project-specific files
 - CI placeholders look like real required gates but still contain fake commands
 - branch default is changed before `dev` exists

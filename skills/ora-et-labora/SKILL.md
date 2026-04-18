@@ -40,7 +40,8 @@ Do not use this skill as a substitute for the detailed phase skills. If the task
 | `worktree-flow` | creating/resuming task branches, worktrees, rebasing, Docker worktree runtime, or PRs into `dev` |
 | `verify-and-evidence` | choosing and recording tests, browser verification, Playwright evidence, CI status, or PR readiness |
 | `release-train` | promoting grouped work from `dev` to `main`, release PRs, release checks, and rollback notes |
-| `repo-bootstrap` | initializing repo templates, `.project/blueprint/`, branch defaults, CI/release placeholders, and GitHub settings |
+| `repo-init` | creating a new local or GitHub repo, choosing owner/org, visibility, repo type, source mode, and initial branch model |
+| `repo-bootstrap` | applying Ora et Labora templates, `.project/blueprint/`, CI/release placeholders, and conventions to an existing repo |
 
 ## End-To-End Lifecycle
 
@@ -65,9 +66,12 @@ Do not use this skill as a substitute for the detailed phase skills. If the task
 7. Release.
    - Use `release-train`.
    - Promote grouped `dev` work to `main` with release checks and rollback notes.
-8. Bootstrap new repos.
+8. Create new repos.
+   - Use `repo-init`.
+   - Confirm owner/org, visibility, repo type, source mode, local path, and branch model before creating GitHub remotes.
+9. Bootstrap existing repos.
    - Use `repo-bootstrap`.
-   - Apply templates, blueprint docs, branch defaults, and GitHub setting plan.
+   - Apply templates, blueprint docs, branch defaults, and GitHub setting plan to a repo that already exists.
 
 ## Core Policy
 

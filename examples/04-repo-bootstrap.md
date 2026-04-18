@@ -1,8 +1,9 @@
-# Example: Bootstrap A New Repo
+# Example: Bootstrap An Existing Repo
 
 ## Scenario
 
-- new repo with no issue templates, no PR template, no `.project/blueprint/`, and no explicit branch model
+- existing repo with no issue templates, no PR template, no `.project/blueprint/`, and no explicit branch model
+- the GitHub repository already exists, so repo creation is out of scope
 
 ## Workflow
 
@@ -16,4 +17,4 @@
 
 ## Key Point
 
-Bootstrap is about making the workflow visible in files. Templates and blueprint docs should exist before the first serious issue, not after the project is already drifting.
+Bootstrap is about making the workflow visible in files for a repo that already exists. Use `repo-init` instead when the GitHub repo or local repo still needs to be created.

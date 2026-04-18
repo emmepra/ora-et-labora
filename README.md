@@ -75,7 +75,8 @@ skills/state-logging/       CURRENT.md and delta-only task log discipline
 skills/worktree-flow/       branch naming, worktrees, PR-to-dev, Docker rules
 skills/verify-and-evidence/ modality-based verification and Playwright evidence
 skills/release-train/       grouped dev-to-main release flow
-skills/repo-bootstrap/      repo templates and GitHub defaults/bootstrap
+skills/repo-init/           new repo creation, owner/org, visibility, repo type
+skills/repo-bootstrap/      existing repo templates and workflow bootstrap
 scripts/                    install, sync, and validation helpers
 examples/                   concrete end-to-end workflow examples
 .github/workflows/          repo-level validation workflow
@@ -110,8 +111,10 @@ The operating procedure is intentionally inline in the skill files. Extra files 
   - chooses verification modalities and stores browser evidence correctly
 - `release-train`
   - prepares grouped `dev` to `main` release PRs
+- `repo-init`
+  - creates new local/GitHub repos with the right owner, visibility, repo type, branch model, and initial workflow setup
 - `repo-bootstrap`
-  - applies workflow templates and bootstraps repo conventions
+  - applies workflow templates and conventions to existing repositories
 
 ## Install
 
@@ -128,6 +131,7 @@ python ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github
   skills/worktree-flow \
   skills/verify-and-evidence \
   skills/release-train \
+  skills/repo-init \
   skills/repo-bootstrap
 ```
 
@@ -186,4 +190,5 @@ Start with:
 - [Frontend Bugfix With Browser Evidence](examples/01-frontend-bugfix.md)
 - [Docker Across Two Worktrees](examples/02-docker-multi-worktree.md)
 - [Grouped Release Train](examples/03-release-train.md)
-- [Bootstrap A New Repo](examples/04-repo-bootstrap.md)
+- [Bootstrap An Existing Repo](examples/04-repo-bootstrap.md)
+- [Initialize A New Repo](examples/05-repo-init.md)

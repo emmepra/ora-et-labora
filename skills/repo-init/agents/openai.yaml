@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repo Init"
+  short_description: "Create new repos with Ora et Labora setup"
+  default_prompt: "Use $repo-init to create a new repository and apply the Ora et Labora workflow."
