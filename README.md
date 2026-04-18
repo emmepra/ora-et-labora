@@ -115,24 +115,39 @@ The operating procedure is intentionally inline in the skill files. Extra files 
 
 ## Install
 
-Install the full suite from this repo:
+Install the full suite from this repo with one `--path` argument followed by all skill paths:
 
 ```bash
 python ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
   --repo emmepra/ora-et-labora \
-  --path skills/ora-et-labora \
-  --path skills/issue-shaping \
-  --path skills/blueprint-guard \
-  --path skills/state-logging \
-  --path skills/worktree-flow \
-  --path skills/verify-and-evidence \
-  --path skills/release-train \
-  --path skills/repo-bootstrap
+  --path \
+  skills/ora-et-labora \
+  skills/issue-shaping \
+  skills/blueprint-guard \
+  skills/state-logging \
+  skills/worktree-flow \
+  skills/verify-and-evidence \
+  skills/release-train \
+  skills/repo-bootstrap
 ```
 
 Restart Codex after installation so the skill is discovered.
 
-If you are developing from a local clone and want an update-friendly path, use:
+The GitHub installer refuses to overwrite existing skill directories. For updates, remove or replace the installed suite first, or use the local sync helper below.
+
+If you are installing from this local clone while developing the suite, use:
+
+```bash
+python scripts/install_suite.py
+```
+
+To install from a specific branch or tag:
+
+```bash
+python scripts/install_suite.py --ref main
+```
+
+If you want an update-friendly local development path that overwrites existing installed copies, use:
 
 ```bash
 python scripts/sync_local_suite.py --overwrite
@@ -159,7 +174,7 @@ Validate the skill shape:
 
 ```bash
 python ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py \
-  ../skills/ora-et-labora
+  skills/ora-et-labora
 ```
 
 Repeat for the other skill folders when editing them directly.

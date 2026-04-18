@@ -25,6 +25,13 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", default="emmepra/ora-et-labora")
     parser.add_argument("--ref", help="Optional git ref to install from.")
+    parser.add_argument("--dest", help="Optional destination skills directory.")
+    parser.add_argument(
+        "--method",
+        choices=["auto", "download", "git"],
+        default="auto",
+        help="Install method passed through to the Codex skill installer.",
+    )
     return parser.parse_args()
 
 
@@ -35,8 +42,12 @@ def main() -> int:
     cmd = ["python", str(installer), "--repo", args.repo]
     if args.ref:
         cmd.extend(["--ref", args.ref])
-    for path in SKILL_PATHS:
-        cmd.extend(["--path", path])
+    if args.dest:
+        cmd.extend(["--dest", args.dest])
+    if args.method:
+        cmd.extend(["--method", args.method])
+    cmd.append("--path")
+    cmd.extend(SKILL_PATHS)
     subprocess.run(cmd, check=True)
     print("Restart Codex to pick up the installed skills.")
     return 0
