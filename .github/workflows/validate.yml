@@ -1,0 +1,25 @@
+name: Validate
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Fetch skill-creator helper
+        run: |
+          git clone --depth=1 https://github.com/openai/skills.git /tmp/openai-skills
+          mkdir -p "$HOME/.codex/skills/.system"
+          rm -rf "$HOME/.codex/skills/.system/skill-creator"
+          cp -R /tmp/openai-skills/skills/.system/skill-creator "$HOME/.codex/skills/.system/skill-creator"
+      - name: Validate suite
+        run: python scripts/validate_all.py

@@ -76,6 +76,9 @@ skills/worktree-flow/       branch naming, worktrees, PR-to-dev, Docker rules
 skills/verify-and-evidence/ modality-based verification and Playwright evidence
 skills/release-train/       grouped dev-to-main release flow
 skills/repo-bootstrap/      repo templates and GitHub defaults/bootstrap
+scripts/                    install, sync, and validation helpers
+examples/                   concrete end-to-end workflow examples
+.github/workflows/          repo-level validation workflow
 tests/                      script-level validation
 ```
 
@@ -126,9 +129,23 @@ python ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github
 
 Restart Codex after installation so the skill is discovered.
 
+If you are developing from a local clone and want an update-friendly path, use:
+
+```bash
+python scripts/sync_local_suite.py --overwrite
+```
+
+That copies the suite directly into your local Codex skills directory and is useful when iterating on the repo itself.
+
 ## Local Validation
 
-Run the bundled tests:
+Run the whole suite validator:
+
+```bash
+python scripts/validate_all.py
+```
+
+Or run the bundled tests directly:
 
 ```bash
 cd tests
@@ -143,3 +160,12 @@ python ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py \
 ```
 
 Repeat for the other skill folders when editing them directly.
+
+## Examples
+
+Start with:
+
+- [Frontend Bugfix With Browser Evidence](examples/01-frontend-bugfix.md)
+- [Docker Across Two Worktrees](examples/02-docker-multi-worktree.md)
+- [Grouped Release Train](examples/03-release-train.md)
+- [Bootstrap A New Repo](examples/04-repo-bootstrap.md)
