@@ -1,0 +1,16 @@
+name: Release
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  release-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace with release gates
+        run: |
+          echo "Replace this file with project-specific release gates."
+          echo "Recommended gates: regression suite, migrations/schema checks, release notes generation."

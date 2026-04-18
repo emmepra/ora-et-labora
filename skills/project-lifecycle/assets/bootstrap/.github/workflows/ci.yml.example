@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace with project verification
+        run: |
+          echo "Replace this file with project-specific verification commands."
+          echo "Recommended gates depend on change type:"
+          echo "- backend: lint, typecheck, unit/integration, migrations if relevant"
+          echo "- frontend: build, unit checks, browser smoke/e2e for FE work"
+          echo "- cross-stack: combine both"
