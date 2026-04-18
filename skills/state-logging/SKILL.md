@@ -105,6 +105,7 @@ Meaningful deltas:
 - verification passed after previously failing or being pending
 - browser evidence was collected
 - PR opened, retargeted, marked ready, merged, or blocked
+- originating issue was closed by PR merge or failed to close as expected
 - release train prepared, checked, or merged
 - blueprint changed because durable knowledge changed
 
@@ -164,8 +165,10 @@ Prefer searchable event labels:
 6. Before PR handoff, make state resumable.
    - `CURRENT.md` should point to the PR and next action.
    - task log should include the verification state.
+   - PR body should include the originating issue closing reference.
 7. After merge or release, close the loop.
    - Record final merge/release state.
+   - Confirm the originating issue closed when the implementation PR merged, or record the blocker/follow-up if it did not.
    - Update `CURRENT.md` to done or archived if the project uses that convention.
 
 ## Context Compaction Recovery
@@ -189,6 +192,7 @@ Do not reconstruct the full history from memory. Trust the artifacts, then verif
 - "I need both `CURRENT.md` and the log to repeat the issue body."
 - "I changed approach but did not record why."
 - "The PR is open, but `CURRENT.md` still says PR pending."
+- "The PR merged, but nobody checked whether the issue closed."
 - "Verification failed, but the current state still says pending or pass."
 
 All of these mean the state surface is no longer trustworthy.
@@ -216,6 +220,7 @@ Use the script for deterministic initial file layout. Edit the resulting files t
 - `CURRENT.md` exists for nontrivial work
 - task log exists for nontrivial work
 - `CURRENT.md` has current branch, status, PR, verification, next step, and blockers
+- PR and issue state are consistent after merge
 - log contains meaningful transitions only
 - verification verdict and evidence path are recorded when verification matters
 - no raw artifact dumps or command transcripts were pasted into state files

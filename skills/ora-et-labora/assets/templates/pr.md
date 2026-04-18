@@ -6,6 +6,10 @@
 
 {{WHY}}
 
+## Linked Issue
+
+{{LINKED_ISSUE}}
+
 ## Verification
 
 - Local: {{LOCAL_VERIFICATION}}

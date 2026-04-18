@@ -24,6 +24,7 @@
 6. PR to `dev`
    - summarize fix
    - include browser evidence path
+   - include `Closes #123`
 
 ## Key Point
 

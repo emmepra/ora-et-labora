@@ -10,6 +10,7 @@ The suite is built around a simple idea:
 - check the work against the project blueprint
 - keep one issue, one branch, one worktree, and one resumable state surface
 - verify using the right modality for the change
+- make implementation PRs close their originating issues on merge
 - treat browser evidence and Docker runtime behavior as first-class operational concerns
 - integrate into `dev`
 - release from `dev` to `main`
@@ -51,6 +52,7 @@ The branch flow is PR-first into `dev`, while stable promotion happens through g
    - store browser evidence under `.project/logs/playwright/<module-id>/<run-id>/`
 7. Open or update the PR to `dev`.
    - summarize implementation, verification, and blueprint impact
+   - include `Closes #<issue>` for the originating issue
 8. Release `dev` to `main` when requested.
    - grouped release PRs, not one stable merge per implementation PR
 
@@ -61,6 +63,7 @@ The branch flow is PR-first into `dev`, while stable promotion happens through g
 - Logging is delta-only.
 - Verification is modality-specific.
 - Browser verification requires evidence, not just a claim.
+- Implementation PRs must reference and close their originating issues.
 - Docker behavior across worktrees must be explicit.
 - `dev` is the integration branch.
 - `main` is the stable branch.

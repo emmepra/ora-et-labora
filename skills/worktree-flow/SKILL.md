@@ -55,6 +55,7 @@ Do not use this skill for:
 | Hotfix branch | `hotfix/<issue>-<slug>` |
 | Worktree path | `.project/worktrees/<branch-id-without-slashes>` |
 | Implementation PR base | `dev` |
+| Implementation PR issue link | `Closes #<issue-id>` in the PR body |
 | Stable release PR base | `main` |
 | Default Docker mode | one active stack across worktrees |
 | Parallel Docker mode | only with isolated project names, ports, and container/service names |
@@ -94,6 +95,7 @@ Worktree folder names should avoid slashes:
 6. Open a draft PR early when the branch will be active for more than a tiny fix.
    - Base: `dev`.
    - Use a body file or template, not inline shell markdown.
+   - Include `Closes #<issue-id>` or an equivalent GitHub closing keyword for the originating issue.
 7. Rebase on `origin/dev` at required gates.
    - At session start in that worktree.
    - After any merge to `dev`.
@@ -117,6 +119,7 @@ Before marking a PR ready:
 - relevant local checks are current
 - browser evidence exists for frontend behavior changes
 - Docker/runtime state was rebuilt or restarted after sync when relevant
+- PR body contains a closing reference to the originating issue, such as `Closes #123`
 - PR body is rendered from a body file or template
 - branch-local `.project` state points to the PR
 
@@ -188,6 +191,7 @@ Do not let two worktrees silently modify the same contract without surfacing ove
 
 - "I created a worktree but kept editing the main checkout."
 - "The PR targets `main` for normal implementation work."
+- "The PR references the issue in prose but does not use a closing keyword."
 - "I pushed before rebasing on `origin/dev`."
 - "The browser is still using the old dev server."
 - "Two worktrees run Compose with the same ports."
@@ -205,6 +209,7 @@ All of these mean the branch/worktree flow is unsafe.
 | "Ports only conflict if both stacks are active." | Exactly. Default to one active stack unless parallel isolation is documented. |
 | "The branch is close enough to `dev`." | Rebase gates exist because stale branches hide conflicts and CI drift. |
 | "A direct merge is faster." | PR-first integration is the safety surface unless the user explicitly overrides it. |
+| "I can close the issue manually after merge." | The PR should carry `Closes #<issue>` so GitHub closes it automatically and auditably on merge. |
 
 ## Completion Checklist
 
@@ -215,6 +220,7 @@ All of these mean the branch/worktree flow is unsafe.
 - branch is synced with `origin/dev`
 - Docker mode is clear: default one-stack or isolated parallel mode
 - PR targets `dev`
+- PR body uses `Closes #<issue-id>` or an equivalent closing keyword for the originating issue
 - PR body comes from a file or template
 - verification is complete before PR readiness
 
@@ -224,6 +230,7 @@ All of these mean the branch/worktree flow is unsafe.
 - running parallel stacks with colliding ports or fixed container names
 - working from the main checkout after creating a worktree
 - opening implementation PRs directly to `main`
+- forgetting the closing issue reference in the PR body
 - failing to rebase after another PR merges to `dev`
 - trusting stale browser or container state after code sync
 

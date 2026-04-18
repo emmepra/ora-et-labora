@@ -2,6 +2,10 @@
 
 ## Why
 
+## Linked Issue
+
+- Closes #
+
 ## Verification
 
 - Local:

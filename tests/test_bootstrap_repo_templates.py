@@ -26,6 +26,9 @@ class BootstrapRepoTemplatesTests(unittest.TestCase):
 
             self.assertTrue((repo_root / ".github" / "PULL_REQUEST_TEMPLATE.md").exists())
             self.assertTrue((repo_root / ".project" / "blueprint" / "00_workflow.md").exists())
+            pr_template = (repo_root / ".github" / "PULL_REQUEST_TEMPLATE.md").read_text()
+            self.assertIn("## Linked Issue", pr_template)
+            self.assertIn("Closes #", pr_template)
 
 
 if __name__ == "__main__":

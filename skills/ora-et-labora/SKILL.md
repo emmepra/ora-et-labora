@@ -85,6 +85,7 @@ Do not use this skill as a substitute for the detailed phase skills. If the task
 - For frontend-impacting work, require browser verification locally and prefer CI browser coverage as well.
 - Treat Playwright artifacts as required evidence for browser verification, not as disposable temp output.
 - Open implementation PRs into `dev`.
+- Implementation PRs must reference the originating issue with a GitHub closing keyword, such as `Closes #123`, so the issue closes when the PR is merged into the default branch.
 - Promote `dev` to `main` through grouped release PRs, not one `main` merge per implementation PR.
 - Render GitHub issue and PR bodies from files or templates. Do not assemble complex markdown inline in a shell command.
 
@@ -97,7 +98,7 @@ Do not use this skill as a substitute for the detailed phase skills. If the task
 | `CURRENT.md` | current status, branch, PR, latest verification, next step, blockers | historical diary, full issue body, raw artifacts |
 | task log | meaningful deltas and state transitions | every command, every edit, repeated issue text |
 | `.project/blueprint/` | durable project model and workflow invariants | task-local notes, transient blockers |
-| PR body | implementation summary, verification evidence, risks, rollback/follow-ups | unresolved template placeholders, raw traces |
+| PR body | implementation summary, closing issue reference, verification evidence, risks, rollback/follow-ups | unresolved template placeholders, raw traces |
 | release PR | grouped scope, release checks, migrations, rollback | individual implementation diaries |
 
 ## Nontrivial Work Definition
@@ -133,6 +134,7 @@ Durable project knowledge includes architecture boundaries, contracts, environme
 - `dev` is the integration branch.
 - `main` is the stable branch.
 - implementation PRs target `dev`.
+- implementation PRs include a closing issue reference, for example `Closes #123`.
 - release PRs promote grouped `dev` changes to `main`.
 
 ## Docker And Runtime Rules
@@ -164,6 +166,7 @@ Use:
 Avoid:
 
 - long inline markdown in shell strings
+- PR bodies without a `Closes #<issue>` or equivalent closing keyword for the originating issue
 - unresolved placeholders
 - hand-built PR bodies with inconsistent sections
 
@@ -198,6 +201,7 @@ Prefer scripts for deterministic file layout and template rendering.
 - "I will skip the blueprint check because the issue is obvious."
 - "I will use one log file for every branch."
 - "I will open a PR to `main` for normal feature work."
+- "I will open the PR without `Closes #<issue>` and close the issue manually later."
 - "I will claim frontend verification without browser evidence."
 - "I will paste complex markdown directly into `gh issue create`."
 - "I will use parallel Docker stacks without isolated ports and project names."
@@ -215,6 +219,7 @@ For any nontrivial task, completion requires:
 - relevant verification completed
 - browser evidence preserved when frontend behavior changed
 - PR opened or updated against `dev`
+- PR body references and closes the originating issue
 - task state and log reflect the latest truth
 
 If any item is intentionally skipped, state why.

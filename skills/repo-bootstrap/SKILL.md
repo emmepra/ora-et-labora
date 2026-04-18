@@ -52,7 +52,7 @@ Do not use this skill when:
 | --- | --- |
 | Bug issue template | `.github/ISSUE_TEMPLATE/bug_report.md` |
 | Feature issue template | `.github/ISSUE_TEMPLATE/feature_request.md` |
-| PR template | `.github/PULL_REQUEST_TEMPLATE.md` |
+| PR template | `.github/PULL_REQUEST_TEMPLATE.md` with a `Linked Issue` / `Closes #` section |
 | CI placeholder | `.github/workflows/ci.yml.example` |
 | Release placeholder | `.github/workflows/release.yml.example` |
 | Workflow blueprint | `.project/blueprint/00_workflow.md` |
@@ -147,10 +147,12 @@ Use:
 - body files
 - `gh issue create --body-file <file>`
 - `gh pr create --body-file <file>`
+- `Closes #<issue-id>` or an equivalent GitHub closing keyword in implementation PR bodies
 
 Avoid:
 
 - long inline shell strings
+- implementation PRs without a closing issue reference
 - unescaped newlines in command arguments
 - ad hoc markdown assembled from memory
 - partially filled templates with unresolved placeholders
@@ -210,6 +212,7 @@ Use the script for baseline copying. Inspect and adapt the copied files before c
 - existing repo workflow inspected
 - `.github/ISSUE_TEMPLATE/` present or intentionally skipped
 - `.github/PULL_REQUEST_TEMPLATE.md` present or intentionally skipped
+- PR template contains a linked issue / closing keyword section
 - CI/release placeholders adapted or clearly marked
 - `.project/blueprint/` baseline present
 - branch model documented
