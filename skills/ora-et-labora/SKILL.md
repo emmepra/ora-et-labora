@@ -77,6 +77,8 @@ Do not use this skill as a substitute for the detailed phase skills. If the task
 
 - Read the closest `AGENTS.md` before acting.
 - Treat `.project/` as the canonical operational surface unless the target repo explicitly chose a different convention before this skill was invoked.
+- Choose the repository visibility profile before creating or bootstrapping workflow artifacts.
+- For public repos, keep `.project/` local by default and publish only sanitized contributor-facing docs.
 - Run a blueprint fit check for every nontrivial issue before implementation starts.
 - Update `.project/blueprint/` only when durable project knowledge changes.
 - Keep logs delta-only. Do not restate information that already lives in GitHub or `CURRENT.md`.
@@ -100,6 +102,26 @@ Do not use this skill as a substitute for the detailed phase skills. If the task
 | `.project/blueprint/` | durable project model and workflow invariants | task-local notes, transient blockers |
 | PR body | implementation summary, closing issue reference, verification evidence, risks, rollback/follow-ups | unresolved template placeholders, raw traces |
 | release PR | grouped scope, release checks, migrations, rollback | individual implementation diaries |
+
+## Visibility Profiles
+
+Ora et Labora supports three repository modes:
+
+| Profile | Use for | Default artifact policy |
+| --- | --- | --- |
+| `private` | personal/private projects | version `.project/blueprint`, `.project/todo`, and concise `.project/logs`; ignore worktrees and raw browser artifacts |
+| `internal` | organization-visible private projects | same as private, but avoid personal notes and write for broader internal readers |
+| `public` | open source or public portfolio work | version `.github` and sanitized public docs; keep `.project`, local issue workspaces, raw browser artifacts, and private agent instructions local by default |
+
+Visibility affects workflow design. Do not treat it as only a GitHub setting.
+
+When using `repo-init` or `repo-bootstrap`, apply the profile with:
+
+```bash
+python skills/ora-et-labora/scripts/bootstrap_repo_templates.py --repo-root <repo> --visibility <private|internal|public>
+```
+
+Public repos can still use Ora et Labora locally. The difference is that local operational memory stays outside the published source unless the user explicitly approves a sanitized subset.
 
 ## Nontrivial Work Definition
 
@@ -191,6 +213,7 @@ Scripts live under `scripts/`:
 - `render_template.py`: render markdown templates with strict placeholder replacement.
 - `init_issue_workspace.py`: initialize `00_brainstorm.md`, `CURRENT.md`, and task log.
 - `bootstrap_repo_templates.py`: copy GitHub templates, blueprint docs, and workflow examples into a target repo.
+- `bootstrap_repo_templates.py --visibility <profile>`: also writes the profile-aware artifact policy into `.gitignore`.
 - `collect_playwright_artifacts.py`: collect browser verification artifacts into `.project/logs/playwright/<module-id>/<run-id>/`.
 
 Prefer scripts for deterministic file layout and template rendering.
@@ -202,6 +225,7 @@ Prefer scripts for deterministic file layout and template rendering.
 - "I will use one log file for every branch."
 - "I will open a PR to `main` for normal feature work."
 - "I will open the PR without `Closes #<issue>` and close the issue manually later."
+- "I will publish `.project/` in a public repo because it is only process state."
 - "I will claim frontend verification without browser evidence."
 - "I will paste complex markdown directly into `gh issue create`."
 - "I will use parallel Docker stacks without isolated ports and project names."
