@@ -2,7 +2,7 @@
 
 ## Status
 
-Implementation complete; PR open.
+Implementation complete; PR open and checks passing.
 
 ## Issue
 
@@ -23,10 +23,11 @@ https://github.com/emmepra/ora-et-labora/pull/2
 - Added tests for private/default and public profile behavior.
 - Fixed CI validation dependency setup for `quick_validate.py`.
 - Verified with `python scripts/validate_all.py`.
+- GitHub PR check `validate` passed.
 
 ## Next Step
 
-- Await CI rerun and PR review/merge into `dev`.
+- Await PR review/merge into `dev`.
 
 ## Blockers
 
