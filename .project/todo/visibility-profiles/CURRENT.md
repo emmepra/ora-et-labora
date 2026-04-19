@@ -2,7 +2,7 @@
 
 ## Status
 
-Implementation complete; PR pending.
+Implementation complete; PR open.
 
 ## Issue
 
@@ -11,6 +11,10 @@ https://github.com/emmepra/ora-et-labora/issues/1
 ## Branch
 
 `feat/1-visibility-profiles`
+
+## PR
+
+https://github.com/emmepra/ora-et-labora/pull/2
 
 ## Latest Work
 
@@ -21,7 +25,7 @@ https://github.com/emmepra/ora-et-labora/issues/1
 
 ## Next Step
 
-- Commit, push, and open a PR to `dev`.
+- Await PR review/merge into `dev`.
 
 ## Blockers
 
