@@ -21,11 +21,12 @@ https://github.com/emmepra/ora-et-labora/pull/2
 - Added visibility profile policy to `repo-init`, `repo-bootstrap`, and the suite index.
 - Updated `bootstrap_repo_templates.py` to write profile-aware `.gitignore` rules.
 - Added tests for private/default and public profile behavior.
+- Fixed CI validation dependency setup for `quick_validate.py`.
 - Verified with `python scripts/validate_all.py`.
 
 ## Next Step
 
-- Await PR review/merge into `dev`.
+- Await CI rerun and PR review/merge into `dev`.
 
 ## Blockers
 
