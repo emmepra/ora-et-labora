@@ -59,6 +59,7 @@ Required before remote creation:
 - owner: personal account or organization, such as `emmepra` or `my-org`
 - repo name
 - visibility: private, public, or internal
+- visibility profile: derived from visibility unless the user explicitly wants different artifact behavior
 - local path or parent folder
 - source mode
 - repo type
@@ -105,6 +106,22 @@ Choose exactly one source mode:
 
 Default to `new-empty` only when the user has not indicated an existing source.
 
+## Visibility Profiles
+
+Repository visibility is not only a GitHub setting. It controls which workflow artifacts are safe to publish.
+
+Use one of these profiles:
+
+| Profile | Default for | Versioned workflow state | Ignored/local workflow state |
+| --- | --- | --- | --- |
+| `private` | personal private repos | `.project/blueprint/**`, `.project/todo/**`, `.project/logs/**` summaries, `.github/**`, project `AGENTS.md` when useful | `.project/worktrees/**`, raw Playwright/browser payloads, secrets, `.env`, local-only overrides |
+| `internal` | organization-only repos | same as `private`, but assume broader internal readers and avoid personal/private notes | `.project/worktrees/**`, raw Playwright/browser payloads, secrets, local-only overrides |
+| `public` | open source or public portfolio repos | `.github/**`, sanitized public docs, optionally a short public `AGENTS.md` if contributor-safe | `.project/**` by default, `AGENTS.local.md`, local challenge logs, raw Playwright/browser payloads, private planning notes |
+
+For public repos, do not publish private agent operational state by default. Translate stable, contributor-useful knowledge into public docs such as `CONTRIBUTING.md`, `SECURITY.md`, `docs/architecture.md`, `docs/testing.md`, or `docs/release.md`. Keep `.project/` local unless the user intentionally approves a sanitized subset.
+
+For private and internal repos, `.project/` can be part of the repository because the workflow memory is useful to future agents. Even there, raw browser artifacts should be handled carefully: commit concise summaries and evidence paths; keep large traces, videos, HAR files, and screenshots local unless a project explicitly wants curated artifacts versioned.
+
 ## Confirmation Gate
 
 Repository creation is high-impact. Before running `gh repo create`, show the plan and ask for approval.
@@ -116,10 +133,12 @@ The confirmation must include:
 - local path
 - source mode
 - repo type
+- visibility profile and artifact publication policy
 - remote creation command shape
 - whether the first push will happen
 - branch model: `dev` default, `main` stable
 - whether Ora et Labora bootstrap files will be applied
+- whether `.project/`, `AGENTS.md`, and public docs will be versioned, local-only, or intentionally skipped
 - whether branch protection/rulesets will be configured now or recorded as pending
 
 Do not create the GitHub repo before this approval.
@@ -135,6 +154,7 @@ Do not create the GitHub repo before this approval.
    - Owner/org.
    - Repo name.
    - Visibility.
+   - Visibility profile.
    - Repo type.
    - Source mode.
    - Local path.
@@ -142,6 +162,7 @@ Do not create the GitHub repo before this approval.
 3. Produce the creation plan.
    - Keep it concrete.
    - Include the exact `OWNER/REPO`.
+   - Include the visibility profile and artifact policy.
    - Include commands to be run conceptually.
    - Ask for explicit approval before GitHub creation.
 4. Prepare the local repo.
@@ -161,8 +182,10 @@ Do not create the GitHub repo before this approval.
 7. Apply Ora et Labora workflow setup.
    - Copy or adapt issue templates.
    - Copy or adapt PR template.
-   - Copy or adapt `.project/blueprint/`.
+   - Copy or adapt `.project/blueprint/` for `private` and `internal` repos.
+   - For `public` repos, keep `.project/` local by default and translate stable guidance into public docs if requested.
    - Add CI/release placeholders appropriate for the repo type.
+   - Apply the profile-aware `.gitignore` policy with `bootstrap_repo_templates.py --visibility <profile>`.
    - Keep placeholders clearly marked until project-specific commands are known.
 8. Commit and push initial setup if approved.
    - Keep initial commit scoped to repo initialization.
@@ -276,6 +299,7 @@ If not configured:
 
 - owner/org is unclear
 - repo visibility is unclear
+- visibility profile or artifact publication policy is unclear
 - local path already exists and may be overwritten
 - remote repo may already exist
 - source mode is unclear
@@ -290,6 +314,7 @@ If not configured:
 | --- | --- |
 | "The owner is probably personal." | Ask or infer only if explicit context makes it safe. Wrong owner is costly. |
 | "Private is a safe default." | It is safer than public, but still ask if visibility was not specified. |
+| "Public can use the same `.project` policy as private." | Public repos need a publishing boundary. Keep agent-private state local unless explicitly sanitized. |
 | "I can create the repo and fix branches later." | Branch model is part of initialization. Plan it before creation. |
 | "Branch protection can be claimed from the template files." | Protection is a GitHub setting. Report it as pending unless configured. |
 | "Repo type does not matter yet." | Repo type determines templates, CI placeholders, verification policy, and browser evidence expectations. |
@@ -307,6 +332,7 @@ If not configured:
 - `main` stable branch exists when applicable
 - `dev` integration/default branch exists when applicable
 - Ora et Labora workflow files applied or intentionally deferred
+- visibility profile applied to `.gitignore` and workflow artifacts
 - initial commit/push completed or intentionally skipped
 - branch protection/ruleset status reported accurately
 - final response includes repo URL, local path, branch model, and pending steps
@@ -320,3 +346,4 @@ If not configured:
 - applying frontend CI placeholders to backend-only repos
 - forgetting to report branch protection as pending
 - overwriting an existing local folder without approval
+- publishing `.project/` or private planning logs in a public repo without explicit sanitization

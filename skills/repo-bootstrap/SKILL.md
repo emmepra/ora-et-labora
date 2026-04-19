@@ -42,6 +42,7 @@ Do not use this skill when:
 - copy or adapt workflow templates into `.github/`
 - create or update `.project/blueprint/` baseline files
 - prepare CI and release workflow placeholders
+- choose and apply the repository visibility profile
 - document branch and release model
 - identify GitHub settings that must be applied to the existing remote
 - avoid overwriting existing project-specific conventions without explicit approval
@@ -60,6 +61,31 @@ Do not use this skill when:
 | Blueprint fit policy | `.project/blueprint/02_blueprint-fit-check.md` |
 | Verification policy | `.project/blueprint/03_verification-policy.md` |
 | Docker worktree policy | `.project/blueprint/04_docker-worktrees.md` |
+| Visibility artifact policy | marked Ora et Labora block in `.gitignore` |
+
+## Visibility Profiles
+
+Bootstrap must decide how workflow state is published before copying files.
+
+Use these profiles:
+
+| Profile | Use for | Publish by default | Keep local/ignored by default |
+| --- | --- | --- | --- |
+| `private` | private personal repos | `.project/blueprint/**`, `.project/todo/**`, concise `.project/logs/**`, `.github/**`, project `AGENTS.md` | `.project/worktrees/**`, raw Playwright traces/videos/HAR/screenshots, secrets |
+| `internal` | organization-internal repos | same as `private`, but written for broader internal readers | `.project/worktrees/**`, raw Playwright payloads, secrets, personal notes |
+| `public` | open source or public portfolio repos | `.github/**`, public docs, sanitized contributor-facing `AGENTS.md` only if useful | `.project/**`, `AGENTS.local.md`, local planning logs, raw Playwright payloads, private operating notes |
+
+If the remote exists, inspect visibility when practical:
+
+```bash
+gh repo view OWNER/REPO --json visibility
+```
+
+If there is no remote, or visibility cannot be determined, ask the user before applying a public/private/internal artifact policy.
+
+Public profile rule: `.project/` is local operational state by default. Do not commit it unless the user explicitly approves a sanitized subset. Stable guidance that public contributors need should move into normal public surfaces such as `CONTRIBUTING.md`, `SECURITY.md`, `docs/architecture.md`, `docs/testing.md`, and `docs/release.md`.
+
+Private/internal profile rule: `.project/` may be versioned, but raw browser artifacts remain controlled. Commit summaries and evidence paths; keep large Playwright traces, videos, HAR files, and screenshots ignored unless the repo explicitly curates them.
 
 ## Bootstrap Procedure
 
@@ -67,12 +93,15 @@ Do not use this skill when:
    - Read the closest `AGENTS.md`.
    - Check existing `.github/`, `.project/`, CI, release, Docker, and README conventions.
    - Identify whether the repo already uses `dev` and `main`.
+   - Identify the remote visibility when possible.
 2. Decide bootstrap mode.
    - Fresh repo: copy baseline templates.
    - Existing repo with partial workflow: merge carefully and preserve project-specific conventions.
    - Existing repo with conflicting workflow: stop and ask before changing branch model or overwriting policy.
+   - Choose `private`, `internal`, or `public` visibility profile.
 3. Copy templates.
    - Use `../ora-et-labora/scripts/bootstrap_repo_templates.py` when the baseline layout is acceptable.
+   - Pass `--visibility <profile>` so `.gitignore` receives the right artifact policy.
    - Use `--force` only when overwrite is explicitly intended.
 4. Adapt placeholders.
    - Replace example CI commands with project-specific commands.
@@ -85,6 +114,7 @@ Do not use this skill when:
    - Browser evidence path.
    - Docker worktree runtime rules.
    - Release flow from `dev` to `main`.
+   - For public repos, keep this local by default or translate sanitized content into public docs before committing.
 6. Apply GitHub defaults when a remote is present and the user approved settings changes.
    - Ensure `dev` exists.
    - Ensure `main` exists.
@@ -179,12 +209,29 @@ For frontend-capable repos, bootstrap should document:
 - Playwright artifacts belong under `.project/logs/playwright/<module-id>/<run-id>/`
 - PR templates must include a browser evidence field
 - CI should include smoke-level browser coverage when practical
+- raw Playwright payloads must follow the visibility profile instead of being committed casually
+
+For public repos, store local browser evidence while working but publish only safe summaries, CI links, or curated screenshots that do not reveal secrets, user data, private URLs, or internal implementation notes.
+
+## Public Repo Pre-Push Check
+
+Before the first push of a public bootstrap, inspect the diff for publishing risk:
+
+- no `.project/**` unless explicitly sanitized and approved
+- no private `AGENTS.md` instructions; use `AGENTS.local.md` for local-only rules
+- no secrets, tokens, private hostnames, account IDs, private paths, or screenshots with sensitive data
+- no raw Playwright traces, videos, HAR files, or screenshots unless intentionally curated
+- issue and PR templates contain public-safe language
+- CI placeholders do not reference private infrastructure
+- README and public docs explain only contributor-relevant workflow rules
 
 ## Red Flags - Stop Bootstrap
 
 - existing project workflow conflicts with Ora et Labora and the user has not approved migration
 - the user actually needs a new repository created, not an existing repository bootstrapped
 - templates would overwrite meaningful project-specific files
+- repo visibility is unknown and artifact publication policy matters
+- public bootstrap would commit `.project/`, private logs, or local-only agent instructions without explicit approval
 - CI placeholders look like real required gates but still contain fake commands
 - branch default is changed before `dev` exists
 - branch protection is claimed but not actually configured
@@ -196,10 +243,12 @@ For frontend-capable repos, bootstrap should document:
 | Excuse | Reality |
 | --- | --- |
 | "Templates are enough." | Bootstrap also needs branch model, blueprint docs, and GitHub settings plan. |
+| "Visibility is only a GitHub flag." | Visibility changes what workflow state can be safely committed. |
 | "We can configure GitHub later and say it is done." | Later is fine, but report it as pending, not complete. |
 | "The repo probably uses standard CI commands." | Inspect the project. Placeholder commands are not real gates. |
 | "Docker rules can stay in chat." | Runtime rules must be durable in `.project/blueprint/`. |
 | "Overwrite is faster." | Existing repo conventions may be intentional. Preserve or ask before overwriting. |
+| "The public repo can include everything because it is only process metadata." | `.project/` often contains private plans, paths, failures, screenshots, and operational assumptions. Keep it local or sanitize deliberately. |
 
 ## Templates And Tools
 
@@ -213,11 +262,13 @@ Use the script for baseline copying. Inspect and adapt the copied files before c
 - `.github/ISSUE_TEMPLATE/` present or intentionally skipped
 - `.github/PULL_REQUEST_TEMPLATE.md` present or intentionally skipped
 - PR template contains a linked issue / closing keyword section
+- visibility profile selected and represented in `.gitignore`
 - CI/release placeholders adapted or clearly marked
-- `.project/blueprint/` baseline present
+- `.project/blueprint/` baseline present for private/internal repos or intentionally local/sanitized for public repos
 - branch model documented
 - Docker worktree behavior documented when relevant
 - browser evidence policy documented for frontend projects
+- public repo pre-push check completed when visibility is public
 - GitHub default branch/ruleset status reported accurately
 - no unresolved placeholders remain in generated templates
 
