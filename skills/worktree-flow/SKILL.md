@@ -56,7 +56,9 @@ Do not use this skill for:
 | Worktree path | `.project/worktrees/<branch-id-without-slashes>` |
 | Implementation PR base | `dev` |
 | Implementation PR issue link | `Closes #<issue-id>` in the PR body |
+| Implementation PR auto-merge | allowed only when all auto-merge gates are satisfied |
 | Stable release PR base | `main` |
+| Release PR auto-merge | never without explicit user approval |
 | Default Docker mode | one active stack across worktrees |
 | Parallel Docker mode | only with isolated project names, ports, and container/service names |
 
@@ -122,6 +124,28 @@ Before marking a PR ready:
 - PR body contains a closing reference to the originating issue, such as `Closes #123`
 - PR body is rendered from a body file or template
 - branch-local `.project` state points to the PR
+
+## Auto-Merge Policy
+
+Implementation PRs into `dev` may use agent auto-merge when every gate below is satisfied. This policy is permission to use GitHub's merge machinery when safe; it is not permission to bypass repository rules, required checks, branch protection, review requirements, or an explicit user hold.
+
+Auto-merge gates for implementation PRs:
+
+- PR target is `dev`, not `main`.
+- PR is not a release PR, hotfix-to-stable PR, or emergency production promotion.
+- PR body includes a closing reference for the originating issue, such as `Closes #123`.
+- Branch is rebased on current `origin/dev`.
+- Local verification is recorded in `CURRENT.md`, the task log, and the PR body.
+- Browser evidence exists when frontend-visible behavior changed, or the PR body explains why browser verification is not applicable.
+- Required CI is passing, or GitHub auto-merge is enabled while required CI is pending.
+- No unresolved review threads, requested changes, merge conflicts, blocked labels, or explicit user hold are present.
+- Branch-local `.project` state points to the PR and records the auto-merge decision.
+
+Use `gh pr merge --auto --merge` when required checks are still pending and GitHub auto-merge is available. Use an immediate merge command only when checks are already green and all gates are satisfied.
+
+If GitHub auto-merge is unavailable, blocked by settings, or rejected by branch protection, do not force the merge. Record the blocker and leave the PR open.
+
+Release PRs into `main` require explicit user approval before merge, even when checks are green. Do not enable auto-merge for release PRs unless the user explicitly says to enable auto-merge for that specific release PR.
 
 ## Docker Runtime Model
 
@@ -193,6 +217,8 @@ Do not let two worktrees silently modify the same contract without surfacing ove
 - "The PR targets `main` for normal implementation work."
 - "The PR references the issue in prose but does not use a closing keyword."
 - "I pushed before rebasing on `origin/dev`."
+- "I enabled auto-merge without checking reviews, CI, issue closure, and branch freshness."
+- "I enabled auto-merge for a release PR into `main` without explicit user approval."
 - "The browser is still using the old dev server."
 - "Two worktrees run Compose with the same ports."
 - "The repo has fixed `container_name` values but I started parallel stacks."
@@ -210,6 +236,7 @@ All of these mean the branch/worktree flow is unsafe.
 | "The branch is close enough to `dev`." | Rebase gates exist because stale branches hide conflicts and CI drift. |
 | "A direct merge is faster." | PR-first integration is the safety surface unless the user explicitly overrides it. |
 | "I can close the issue manually after merge." | The PR should carry `Closes #<issue>` so GitHub closes it automatically and auditably on merge. |
+| "Auto-merge means GitHub will handle everything." | Auto-merge only waits for GitHub gates. The agent must still confirm branch freshness, verification, reviews, issue closure, and state logging. |
 
 ## Completion Checklist
 
@@ -223,6 +250,7 @@ All of these mean the branch/worktree flow is unsafe.
 - PR body uses `Closes #<issue-id>` or an equivalent closing keyword for the originating issue
 - PR body comes from a file or template
 - verification is complete before PR readiness
+- auto-merge is enabled only for eligible `dev` PRs, or explicitly skipped/blocked in the task log
 
 ## Common Mistakes
 
@@ -231,6 +259,7 @@ All of these mean the branch/worktree flow is unsafe.
 - working from the main checkout after creating a worktree
 - opening implementation PRs directly to `main`
 - forgetting the closing issue reference in the PR body
+- enabling auto-merge on release PRs into `main` without explicit user approval
 - failing to rebase after another PR merges to `dev`
 - trusting stale browser or container state after code sync
 
