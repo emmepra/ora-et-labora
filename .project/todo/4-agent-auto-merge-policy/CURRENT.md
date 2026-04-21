@@ -14,7 +14,11 @@ https://github.com/emmepra/ora-et-labora/issues/4
 
 ## Status
 
-Implementation complete; PR pending.
+Implementation complete; PR open.
+
+## PR
+
+https://github.com/emmepra/ora-et-labora/pull/5
 
 ## Latest Verification
 
@@ -22,7 +26,7 @@ Implementation complete; PR pending.
 
 ## Next Step
 
-Commit, push, and open PR to `dev`.
+Update PR body, wait for CI, and enable/complete auto-merge if gates pass.
 
 ## Blockers
 

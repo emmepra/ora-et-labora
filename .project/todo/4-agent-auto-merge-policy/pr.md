@@ -22,8 +22,14 @@ Closes #4
 
 ## Auto-Merge Eligibility
 
-- Agent auto-merge requested: no for this PR; review before merging.
-- This PR defines the policy and should not be used as the first unattended auto-merge test.
+- Agent auto-merge requested: yes, after required checks pass.
+- Target is `dev`.
+- PR is not a release PR into `main`.
+- Branch was rebased on `origin/dev` before push.
+- PR body includes `Closes #4`.
+- Local verification passed with `python scripts/validate_all.py`.
+- Browser verification is not applicable for this docs/process/template-only change.
+- Branch-local `.project` state is current.
 
 ## Blueprint Updates
 
