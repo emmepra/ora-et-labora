@@ -100,6 +100,8 @@ Do not merge every feature/fix PR directly into `main`. That defeats grouped rel
    - Do not duplicate the entire release PR body in local logs.
 8. Merge only when release gates are satisfied.
    - If gates are blocked, record blocker and do not claim release readiness.
+   - Release PRs into `main` require explicit user approval before merge.
+   - Do not enable auto-merge for release PRs unless the user explicitly approves auto-merge for that specific release PR.
 
 ## Release Checks
 
@@ -113,6 +115,7 @@ Run or confirm:
 - deployment or runtime config checks if relevant
 - release-note accuracy
 - rollback plan plausibility
+- explicit user approval before merging a release PR into `main`
 
 If a check is skipped, the release PR must say why.
 
@@ -157,6 +160,7 @@ Weak rollback notes:
 - Rollback says only "revert if needed."
 - The release is being made by merging each implementation PR separately to `main`.
 - The release uses stale verification from before recent `dev` merges.
+- Auto-merge is enabled for a release PR into `main` without explicit user approval.
 
 All of these mean the release train is not ready.
 
@@ -169,6 +173,7 @@ All of these mean the release train is not ready.
 | "Rollback is obvious." | If it is obvious, write the concrete rollback action. |
 | "No browser check is needed because frontend PRs were already reviewed." | Review is not browser verification. Include current browser status or explain why not needed. |
 | "We can promote directly from feature branch to `main`." | Normal flow is implementation to `dev`, release train to `main`, unless explicitly overridden. |
+| "Checks are green, so the release PR can auto-merge." | `main` is stable. Release merges require explicit user approval unless the user approved auto-merge for that specific release PR. |
 
 ## Template And Tools
 
@@ -186,6 +191,7 @@ Use the template as the release body structure. Fill unknown statuses explicitly
 - operational notes captured when runtime/deploy changed
 - rollback plan concrete
 - release PR targets `main`
+- explicit user approval recorded before merge
 - release state recorded without duplicating the entire PR body locally
 
 ## Common Mistakes
@@ -194,5 +200,6 @@ Use the template as the release body structure. Fill unknown statuses explicitly
 - forgetting rollback notes
 - using stale verification status that no longer reflects current `dev`
 - failing to identify included PRs
+- auto-merging a release PR into `main` without explicit user approval
 - treating release notes as optional when users or operators need them
 - merging a release train while required checks are still pending
