@@ -22,11 +22,11 @@ https://github.com/emmepra/ora-et-labora/pull/5
 
 ## Latest Verification
 
-`python scripts/validate_all.py` passed.
+`python scripts/validate_all.py` passed locally. GitHub `validate` passed on PR #5 before final state update.
 
 ## Next Step
 
-Update PR body, wait for CI, and enable/complete auto-merge if gates pass.
+Enable GitHub auto-merge on PR #5 and confirm merge/issue closure.
 
 ## Blockers
 
