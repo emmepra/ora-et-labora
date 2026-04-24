@@ -250,7 +250,8 @@ All of these mean the branch/worktree flow is unsafe.
 - Docker mode is clear: default one-stack or isolated parallel mode
 - PR targets `dev`
 - PR body uses `Closes #<issue-id>` or an equivalent closing keyword for the originating issue
-- PR body comes from `create_pr_from_template.py` or a rendered body file
+   - PR body comes from `create_pr_from_template.py` or a rendered body file
+   - GitHub `validate` rejects PRs whose bodies are missing required template sections or the `Closes #<issue>` reference
 - verification is complete before PR readiness
 - auto-merge is enabled only for eligible `dev` PRs, or explicitly skipped/blocked in the task log
 

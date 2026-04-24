@@ -31,6 +31,11 @@ class TemplateEnforcementPolicyTests(unittest.TestCase):
         self.assertIn("--body-file", issue_script)
         self.assertIn("--body-file", pr_script)
 
+    def test_validate_workflow_runs_pr_body_gate(self) -> None:
+        workflow = (REPO_ROOT / ".github" / "workflows" / "validate.yml").read_text()
+        self.assertIn("Validate PR body", workflow)
+        self.assertIn("scripts/validate_pr_body.py", workflow)
+
 
 if __name__ == "__main__":
     unittest.main()
