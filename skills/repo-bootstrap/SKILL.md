@@ -53,6 +53,7 @@ Do not use this skill when:
 | --- | --- |
 | Bug issue template | `.github/ISSUE_TEMPLATE/bug_report.md` |
 | Feature issue template | `.github/ISSUE_TEMPLATE/feature_request.md` |
+| Issue template config | `.github/ISSUE_TEMPLATE/config.yml` with `blank_issues_enabled: false` |
 | PR template | `.github/PULL_REQUEST_TEMPLATE.md` with a `Linked Issue` / `Closes #` section |
 | CI placeholder | `.github/workflows/ci.yml.example` |
 | Release placeholder | `.github/workflows/release.yml.example` |
@@ -174,6 +175,7 @@ Issue and PR formatting should be deterministic.
 Use:
 
 - templates under `.github/`
+- issue template config under `.github/ISSUE_TEMPLATE/config.yml`
 - body files
 - `gh issue create --body-file <file>`
 - `gh pr create --body-file <file>`
@@ -260,6 +262,7 @@ Use the script for baseline copying. Inspect and adapt the copied files before c
 
 - existing repo workflow inspected
 - `.github/ISSUE_TEMPLATE/` present or intentionally skipped
+- `.github/ISSUE_TEMPLATE/config.yml` disables blank issues unless intentionally overridden
 - `.github/PULL_REQUEST_TEMPLATE.md` present or intentionally skipped
 - PR template contains a linked issue / closing keyword section
 - visibility profile selected and represented in `.gitignore`

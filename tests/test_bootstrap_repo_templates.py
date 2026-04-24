@@ -25,10 +25,13 @@ class BootstrapRepoTemplatesTests(unittest.TestCase):
             )
 
             self.assertTrue((repo_root / ".github" / "PULL_REQUEST_TEMPLATE.md").exists())
+            self.assertTrue((repo_root / ".github" / "ISSUE_TEMPLATE" / "config.yml").exists())
             self.assertTrue((repo_root / ".project" / "blueprint" / "00_workflow.md").exists())
             pr_template = (repo_root / ".github" / "PULL_REQUEST_TEMPLATE.md").read_text()
+            issue_config = (repo_root / ".github" / "ISSUE_TEMPLATE" / "config.yml").read_text()
             self.assertIn("## Linked Issue", pr_template)
             self.assertIn("Closes #", pr_template)
+            self.assertIn("blank_issues_enabled: false", issue_config)
             gitignore = (repo_root / ".gitignore").read_text()
             self.assertIn("Visibility profile: private", gitignore)
             self.assertIn(".project/worktrees/", gitignore)

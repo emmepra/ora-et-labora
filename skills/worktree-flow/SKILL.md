@@ -96,7 +96,9 @@ Worktree folder names should avoid slashes:
    - Write `.project/todo`, `.project/logs`, and `.project/blueprint` in the assigned worktree checkout for branch work.
 6. Open a draft PR early when the branch will be active for more than a tiny fix.
    - Base: `dev`.
-   - Use a body file or template, not inline shell markdown.
+   - Standard path: use `../ora-et-labora/scripts/create_pr_from_template.py`.
+   - Minimum fallback: render a body file first, then use `gh pr create --body-file <file>`.
+   - Do not hand-write multi-section PR markdown directly into `gh pr create`.
    - Include `Closes #<issue-id>` or an equivalent GitHub closing keyword for the originating issue.
 7. Rebase on `origin/dev` at required gates.
    - At session start in that worktree.
@@ -122,7 +124,7 @@ Before marking a PR ready:
 - browser evidence exists for frontend behavior changes
 - Docker/runtime state was rebuilt or restarted after sync when relevant
 - PR body contains a closing reference to the originating issue, such as `Closes #123`
-- PR body is rendered from a body file or template
+- PR body is rendered through the wrapper script or from a rendered body file
 - branch-local `.project` state points to the PR
 
 ## Auto-Merge Policy
@@ -248,7 +250,7 @@ All of these mean the branch/worktree flow is unsafe.
 - Docker mode is clear: default one-stack or isolated parallel mode
 - PR targets `dev`
 - PR body uses `Closes #<issue-id>` or an equivalent closing keyword for the originating issue
-- PR body comes from a file or template
+- PR body comes from `create_pr_from_template.py` or a rendered body file
 - verification is complete before PR readiness
 - auto-merge is enabled only for eligible `dev` PRs, or explicitly skipped/blocked in the task log
 

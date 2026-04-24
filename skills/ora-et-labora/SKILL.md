@@ -186,8 +186,10 @@ Use templates and body files for complex GitHub markdown.
 
 Use:
 
-- `gh issue create --body-file <file>`
-- `gh pr create --body-file <file>`
+- `create_issue_from_template.py` for issue creation
+- `create_pr_from_template.py` for PR creation
+- `gh issue create --body-file <file>` only as a fallback after rendering a body file
+- `gh pr create --body-file <file>` only as a fallback after rendering a body file
 
 Avoid:
 
@@ -215,6 +217,8 @@ Use these rather than recreating structure from memory.
 Scripts live under `scripts/`:
 
 - `render_template.py`: render markdown templates with strict placeholder replacement.
+- `create_issue_from_template.py`: render an issue template and create the GitHub issue from the body file.
+- `create_pr_from_template.py`: render a PR template and create the GitHub PR from the body file.
 - `init_issue_workspace.py`: initialize `00_brainstorm.md`, `CURRENT.md`, and task log.
 - `bootstrap_repo_templates.py`: copy GitHub templates, blueprint docs, and workflow examples into a target repo.
 - `bootstrap_repo_templates.py --visibility <profile>`: also writes the profile-aware artifact policy into `.gitignore`.
@@ -229,6 +233,7 @@ Prefer scripts for deterministic file layout and template rendering.
 - "I will use one log file for every branch."
 - "I will open a PR to `main` for normal feature work."
 - "I will open the PR without `Closes #<issue>` and close the issue manually later."
+- "I will skip the wrapper script and hand-write the issue or PR body inline."
 - "I will enable auto-merge without checking CI, reviews, branch freshness, and task state."
 - "I will auto-merge the release PR into `main` because checks are green."
 - "I will publish `.project/` in a public repo because it is only process state."
