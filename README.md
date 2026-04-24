@@ -101,6 +101,7 @@ The suite includes:
 - issue, PR, release, brainstorm, current-state, and log templates
 - bootstrap assets for `.github/` and `.project/blueprint/`
 - helper scripts for template rendering, issue/PR creation, issue workspace initialization, visibility-aware bootstrap, and Playwright artifact collection
+- a governance helper that can plan or apply default repo settings and a standard issue label set
 - a CI gate that rejects malformed implementation or release PR bodies that do not satisfy the suite contract
 
 The operating procedure is intentionally inline in the skill files. Extra files are reserved for templates, scripts, bootstrap assets, tests, and examples.

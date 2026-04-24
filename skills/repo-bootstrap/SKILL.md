@@ -57,6 +57,7 @@ Do not use this skill when:
 | PR template | `.github/PULL_REQUEST_TEMPLATE.md` with a `Linked Issue` / `Closes #` section |
 | PR body validation workflow | `.github/workflows/validate-pr-body.yml` |
 | PR body validator script | `scripts/validate_pr_body.py` |
+| Governance helper | `../ora-et-labora/scripts/configure_repo_governance.py` |
 | CI placeholder | `.github/workflows/ci.yml.example` |
 | Release placeholder | `.github/workflows/release.yml.example` |
 | Workflow blueprint | `.project/blueprint/00_workflow.md` |
@@ -123,6 +124,7 @@ Private/internal profile rule: `.project/` may be versioned, but raw browser art
    - Ensure `dev` exists.
    - Ensure `main` exists.
    - Set default branch to `dev`.
+   - Apply the standard repo settings and default label set with `configure_repo_governance.py` when appropriate.
    - Configure branch protections or rulesets if requested and supported.
 7. Validate.
    - Check generated markdown formatting.
@@ -147,6 +149,13 @@ Typical CLI operations after the remote exists:
 
 ```bash
 gh repo edit OWNER/REPO --default-branch dev
+```
+
+Preferred governance path after the remote exists:
+
+```bash
+python skills/ora-et-labora/scripts/configure_repo_governance.py --repo OWNER/REPO
+python skills/ora-et-labora/scripts/configure_repo_governance.py --repo OWNER/REPO --apply
 ```
 
 Branch protection and rulesets may require `gh api` or repository settings automation. Do not pretend they were configured if only templates were copied.

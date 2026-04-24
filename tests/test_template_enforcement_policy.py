@@ -41,6 +41,12 @@ class TemplateEnforcementPolicyTests(unittest.TestCase):
         validator = (REPO_ROOT / "skills" / "ora-et-labora" / "scripts" / "validate_pr_body.py")
         self.assertTrue(validator.exists())
 
+    def test_repo_init_and_bootstrap_reference_governance_helper(self) -> None:
+        repo_init = (REPO_ROOT / "skills" / "repo-init" / "SKILL.md").read_text()
+        repo_bootstrap = (REPO_ROOT / "skills" / "repo-bootstrap" / "SKILL.md").read_text()
+        self.assertIn("configure_repo_governance.py", repo_init)
+        self.assertIn("configure_repo_governance.py", repo_bootstrap)
+
 
 if __name__ == "__main__":
     unittest.main()

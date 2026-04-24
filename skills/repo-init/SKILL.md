@@ -186,6 +186,7 @@ Do not create the GitHub repo before this approval.
    - For `public` repos, keep `.project/` local by default and translate stable guidance into public docs if requested.
    - Add CI/release placeholders appropriate for the repo type.
    - Apply the profile-aware `.gitignore` policy with `bootstrap_repo_templates.py --visibility <profile>`.
+   - Plan or apply the standard repo settings and label bundle with `configure_repo_governance.py`.
    - Keep placeholders clearly marked until project-specific commands are known.
 8. Commit and push initial setup if approved.
    - Keep initial commit scoped to repo initialization.
@@ -224,6 +225,18 @@ Set default branch after `dev` exists remotely:
 
 ```bash
 gh repo edit OWNER/REPO --default-branch dev
+```
+
+Plan the standard governance changes first:
+
+```bash
+python skills/ora-et-labora/scripts/configure_repo_governance.py --repo OWNER/REPO
+```
+
+Apply them explicitly after approval:
+
+```bash
+python skills/ora-et-labora/scripts/configure_repo_governance.py --repo OWNER/REPO --apply
 ```
 
 Do not claim branch protection or rulesets are configured unless the command/API call has actually succeeded.
@@ -294,6 +307,17 @@ If not configured:
 
 - record as pending
 - do not imply protection exists
+
+The current governance helper covers:
+
+- default branch
+- delete branch on merge
+- auto-merge enablement
+- update-branch allowance
+- merge/squash/rebase merge method toggles
+- a default issue label set including `bug`, `enhancement`, `chore`, `docs`, and `release`
+
+Branch protection and rulesets should still be reported as pending unless separately configured.
 
 ## Red Flags - Stop Before Creating
 
