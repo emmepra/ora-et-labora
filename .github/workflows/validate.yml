@@ -23,5 +23,10 @@ jobs:
           mkdir -p "$HOME/.codex/skills/.system"
           rm -rf "$HOME/.codex/skills/.system/skill-creator"
           cp -R /tmp/openai-skills/skills/.system/skill-creator "$HOME/.codex/skills/.system/skill-creator"
+      - name: Validate PR body
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body || '' }}
+        run: python scripts/validate_pr_body.py --body "$PR_BODY"
       - name: Validate suite
         run: python scripts/validate_all.py
