@@ -49,7 +49,7 @@ Do not use this skill for:
 - clarify the problem and intended outcome before code changes
 - capture constraints, non-goals, risks, unknowns, and acceptance checks
 - produce or update `.project/todo/<module-id>/00_brainstorm.md`
-- draft or refine the GitHub issue body using a template or body file
+- draft or refine the GitHub issue body using the issue wrapper or a rendered body file
 - identify the likely verification modalities early
 - leave a clean handoff for blueprint checking and worktree setup
 
@@ -112,7 +112,9 @@ If the same paragraph appears in all artifacts, the workflow is becoming redunda
 8. Draft or refine the GitHub issue body.
    - Use `issue-bug.md` for bugs.
    - Use `issue-feature.md` for features.
-   - Use a body file with `gh issue create --body-file <file>` when creating the issue.
+   - Standard path: use `../ora-et-labora/scripts/create_issue_from_template.py`.
+   - Minimum fallback: render a body file first, then use `gh issue create --body-file <file>`.
+   - Do not hand-write multi-section issue markdown directly into `gh issue create`.
 
 ## Output Contract
 
@@ -145,7 +147,7 @@ A shaped issue is ready only when:
 - acceptance checks are concrete
 - verification modalities are named
 - any suspected blueprint conflict is visible
-- the issue body is valid markdown rendered from a file or template
+- the issue body is valid markdown rendered through the wrapper script or a rendered template body file
 
 ## Red Flags - Stop Before Coding
 
@@ -208,8 +210,9 @@ Verification plan:
 - `../ora-et-labora/assets/templates/issue-bug.md`
 - `../ora-et-labora/assets/templates/issue-feature.md`
 - `../ora-et-labora/scripts/render_template.py`
+- `../ora-et-labora/scripts/create_issue_from_template.py`
 
-Use templates and rendered body files when producing GitHub issue markdown.
+Use the issue wrapper by default. Raw `gh issue create` is acceptable only when it still uses a rendered body file and the wrapper genuinely does not fit the operation.
 
 ## Handoff
 

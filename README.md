@@ -100,7 +100,7 @@ The suite includes:
 - detailed self-contained `SKILL.md` bodies with procedure, red flags, rationalization counters, and completion checklists
 - issue, PR, release, brainstorm, current-state, and log templates
 - bootstrap assets for `.github/` and `.project/blueprint/`
-- helper scripts for template rendering, issue workspace initialization, visibility-aware bootstrap, and Playwright artifact collection
+- helper scripts for template rendering, issue/PR creation, issue workspace initialization, visibility-aware bootstrap, and Playwright artifact collection
 
 The operating procedure is intentionally inline in the skill files. Extra files are reserved for templates, scripts, bootstrap assets, tests, and examples.
 
