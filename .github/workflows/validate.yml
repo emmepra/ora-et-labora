@@ -27,6 +27,7 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           PR_BODY: ${{ github.event.pull_request.body || '' }}
-        run: python skills/ora-et-labora/scripts/validate_pr_body.py --body "$PR_BODY"
+          BASE_BRANCH: ${{ github.base_ref || '' }}
+        run: python skills/ora-et-labora/scripts/validate_pr_body.py --body "$PR_BODY" --base-branch "$BASE_BRANCH"
       - name: Validate suite
         run: python scripts/validate_all.py

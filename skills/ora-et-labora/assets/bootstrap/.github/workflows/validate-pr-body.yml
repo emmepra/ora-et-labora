@@ -17,4 +17,5 @@ jobs:
       - name: Validate PR body
         env:
           PR_BODY: ${{ github.event.pull_request.body || '' }}
-        run: python scripts/validate_pr_body.py --body "$PR_BODY"
+          BASE_BRANCH: ${{ github.base_ref || '' }}
+        run: python scripts/validate_pr_body.py --body "$PR_BODY" --base-branch "$BASE_BRANCH"

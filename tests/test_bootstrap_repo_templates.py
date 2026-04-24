@@ -90,6 +90,45 @@ Revert the bootstrap if needed.
                 cwd=repo_root,
             )
 
+            release_body = repo_root / "release-body.md"
+            release_body.write_text(
+                """## Release Scope
+
+- Promote a workflow-only release to main.
+
+## Included PRs
+
+- #1
+
+## Release Checks
+
+- Regression: smoke
+- Browser verification: not applicable
+- CI status: pending
+- Migrations / schema: not applicable
+
+## Notes
+
+- Workflow-only release.
+
+## Rollback
+
+Revert the release merge commit on main if needed.
+"""
+            )
+            subprocess.run(
+                [
+                    "python",
+                    str(repo_root / "scripts" / "validate_pr_body.py"),
+                    "--body-file",
+                    str(release_body),
+                    "--base-branch",
+                    "main",
+                ],
+                check=True,
+                cwd=repo_root,
+            )
+
     def test_public_visibility_keeps_project_state_local(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo_root = Path(tmp)

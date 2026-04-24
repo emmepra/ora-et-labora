@@ -35,6 +35,7 @@ class TemplateEnforcementPolicyTests(unittest.TestCase):
         workflow = (REPO_ROOT / ".github" / "workflows" / "validate.yml").read_text()
         self.assertIn("Validate PR body", workflow)
         self.assertIn("skills/ora-et-labora/scripts/validate_pr_body.py", workflow)
+        self.assertIn("--base-branch \"$BASE_BRANCH\"", workflow)
 
     def test_skill_contains_pr_body_validator(self) -> None:
         validator = (REPO_ROOT / "skills" / "ora-et-labora" / "scripts" / "validate_pr_body.py")

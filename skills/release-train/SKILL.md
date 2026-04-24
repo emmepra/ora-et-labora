@@ -91,6 +91,7 @@ Do not merge every feature/fix PR directly into `main`. That defeats grouped rel
 5. Prepare release PR body.
    - Use `../ora-et-labora/assets/templates/release-pr.md`.
    - Prefer a body file and `gh pr create --body-file <file>`.
+   - The PR-body validation gate accepts the release template shape for PRs targeting `main`; do not rewrite release PRs into the implementation template just to satisfy CI.
    - Do not assemble complex markdown inline in shell strings.
 6. Open or update the release PR.
    - Base: `main`.
