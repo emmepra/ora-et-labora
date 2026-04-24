@@ -63,13 +63,16 @@ Do not use this skill as a substitute for the detailed phase skills. If the task
 6. Open or update implementation PR.
    - Use `worktree-flow`, `state-logging`, and `verify-and-evidence`.
    - Render PR body from a file or template.
-7. Release.
+7. Close the merged task workspace.
+   - Use `state-logging` and `worktree-flow`.
+   - Archive the merged task todo under `.project/logs/archive/<module-id>/` and retire the owning worktree/local branch with the cleanup helper.
+8. Release.
    - Use `release-train`.
    - Promote grouped `dev` work to `main` with release checks and rollback notes.
-8. Create new repos.
+9. Create new repos.
    - Use `repo-init`.
    - Confirm owner/org, visibility, repo type, source mode, local path, and branch model before creating GitHub remotes.
-9. Bootstrap existing repos.
+10. Bootstrap existing repos.
    - Use `repo-bootstrap`.
    - Apply templates, blueprint docs, branch defaults, and GitHub setting plan to a repo that already exists.
 
@@ -101,6 +104,7 @@ Do not use this skill as a substitute for the detailed phase skills. If the task
 | `00_brainstorm.md` | challenge record, assumptions, options, risks, blueprint fit | PR status, raw command output |
 | `CURRENT.md` | current status, branch, PR, latest verification, next step, blockers | historical diary, full issue body, raw artifacts |
 | task log | meaningful deltas and state transitions | every command, every edit, repeated issue text |
+| `.project/logs/archive/<module-id>/` | archived task workspace after merge cleanup | active branch state, raw temp artifacts |
 | `.project/blueprint/` | durable project model and workflow invariants | task-local notes, transient blockers |
 | PR body | implementation summary, closing issue reference, verification evidence, risks, rollback/follow-ups | unresolved template placeholders, raw traces |
 | release PR | grouped scope, release checks, migrations, rollback | individual implementation diaries |
@@ -222,6 +226,7 @@ Scripts live under `scripts/`:
 - `configure_repo_governance.py`: plan or apply default GitHub repo settings and a standard Ora et Labora issue label set.
 - `validate_pr_body.py`: validate a PR body against the Ora et Labora PR template contract.
 - `init_issue_workspace.py`: initialize `00_brainstorm.md`, `CURRENT.md`, and task log.
+- `close_task_workspace.py`: archive a merged task workspace and retire the owning worktree/local branch through a dry-run-first cleanup flow.
 - `bootstrap_repo_templates.py`: copy GitHub templates, blueprint docs, the standalone PR-body workflow, and workflow examples into a target repo.
 - `bootstrap_repo_templates.py --visibility <profile>`: also writes the profile-aware artifact policy into `.gitignore`.
 - `collect_playwright_artifacts.py`: collect browser verification artifacts into `.project/logs/playwright/<module-id>/<run-id>/`.
@@ -258,5 +263,6 @@ For any nontrivial task, completion requires:
 - PR opened or updated against `dev`
 - PR body references and closes the originating issue
 - task state and log reflect the latest truth
+- merged task work is archived and cleaned up when the branch is complete
 
 If any item is intentionally skipped, state why.

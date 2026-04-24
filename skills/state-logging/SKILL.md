@@ -48,6 +48,7 @@ Do not use this skill for:
 | --- | --- | --- |
 | `.project/todo/<module-id>/CURRENT.md` | resumable live state | overwrite in place |
 | `.project/logs/<module-id>.md` | durable meaningful history | append only |
+| `.project/logs/archive/<module-id>/` | archived task workspace after merge cleanup | write once when retiring the task |
 | `.project/todo/<module-id>/00_brainstorm.md` | challenge record and fit check | update during shaping/fit |
 | GitHub issue | work contract | update when scope changes |
 | Pull request | implementation and verification summary | update before review/merge |
@@ -61,6 +62,7 @@ Use one source of truth per concern:
 - `00_brainstorm.md`: design tradeoffs, assumptions, risk, feasibility, and blueprint fit
 - `CURRENT.md`: current status, next step, blocker, branch, PR, latest verification result
 - task log: approach changes, blocker transitions, verification result changes, PR/release state changes
+- `.project/logs/archive/<module-id>/`: retired task workspace snapshot after merge cleanup
 - PR: implementation summary, user-facing verification evidence, risk, rollback, follow-ups
 - release PR: promotion scope, included PRs, release checks, rollback plan
 
@@ -170,6 +172,7 @@ Prefer searchable event labels:
    - Record final merge/release state.
    - Confirm the originating issue closed when the implementation PR merged, or record the blocker/follow-up if it did not.
    - Update `CURRENT.md` to done or archived if the project uses that convention.
+   - When the task branch is truly finished, use `../ora-et-labora/scripts/close_task_workspace.py --repo-root . --module-id <module-id>` to archive the task workspace and retire the owning worktree/local branch. Review the dry-run plan first, then add `--apply`.
 
 ## Context Compaction Recovery
 
@@ -210,6 +213,7 @@ All of these mean the state surface is no longer trustworthy.
 ## Templates And Tools
 
 - `../ora-et-labora/scripts/init_issue_workspace.py`
+- `../ora-et-labora/scripts/close_task_workspace.py`
 - `../ora-et-labora/assets/templates/current.md`
 - `../ora-et-labora/assets/templates/log.md`
 

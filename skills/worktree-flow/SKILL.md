@@ -44,6 +44,7 @@ Do not use this skill for:
 - keep the branch synced with `origin/dev`
 - manage Docker runtime behavior across worktrees
 - prevent stale runtime state from being mistaken for current behavior
+- retire merged task worktrees and local branches through the standard cleanup helper when the work is complete
 
 ## Quick Reference
 
@@ -126,6 +127,14 @@ Before marking a PR ready:
 - PR body contains a closing reference to the originating issue, such as `Closes #123`
 - PR body is rendered through the wrapper script or from a rendered body file
 - branch-local `.project` state points to the PR
+
+After the PR merges into `dev` and the task is complete:
+
+- sync the repo/worktree state to current `dev`
+- confirm the originating issue closed as expected
+- archive the merged task workspace with `../ora-et-labora/scripts/close_task_workspace.py --repo-root . --module-id <module-id>`
+- review the dry-run plan before adding `--apply`
+- let the helper retire the owning worktree and local branch instead of ad hoc cleanup commands
 
 ## Auto-Merge Policy
 

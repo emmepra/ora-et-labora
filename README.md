@@ -57,7 +57,11 @@ Repo creation and bootstrap are visibility-aware. Private and internal repos can
 7. Open or update the PR to `dev`.
    - summarize implementation, verification, and blueprint impact
    - include `Closes #<issue>` for the originating issue
-8. Release `dev` to `main` when requested.
+8. Clean up after merge.
+   - archive the merged task workspace under `.project/logs/archive/<module-id>/`
+   - remove the owning worktree and local branch when safe
+   - use `python scripts/close_task_workspace.py --repo-root . --module-id <module-id>` and add `--apply` only after checking the plan
+9. Release `dev` to `main` when requested.
    - grouped release PRs, not one stable merge per implementation PR
 
 ## Core Points
@@ -69,6 +73,7 @@ Repo creation and bootstrap are visibility-aware. Private and internal repos can
 - Browser verification requires evidence, not just a claim.
 - Implementation PRs must reference and close their originating issues.
 - Implementation PR auto-merge is allowed only for eligible `dev` PRs.
+- Merged task work should be archived and retired deliberately, not left as lingering worktrees.
 - Release PRs into `main` require explicit approval before merge.
 - Docker behavior across worktrees must be explicit.
 - Public repos keep agent-private state local unless explicitly sanitized.
@@ -102,6 +107,7 @@ The suite includes:
 - bootstrap assets for `.github/` and `.project/blueprint/`
 - helper scripts for template rendering, issue/PR creation, issue workspace initialization, visibility-aware bootstrap, and Playwright artifact collection
 - a governance helper that can plan or apply default repo settings and a standard issue label set
+- a cleanup helper that archives merged task workspaces and retires the owning worktree/local branch through a dry-run-first flow
 - a CI gate that rejects malformed implementation or release PR bodies that do not satisfy the suite contract
 
 The operating procedure is intentionally inline in the skill files. Extra files are reserved for templates, scripts, bootstrap assets, tests, and examples.
