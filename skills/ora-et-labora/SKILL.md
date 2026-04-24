@@ -219,8 +219,9 @@ Scripts live under `scripts/`:
 - `render_template.py`: render markdown templates with strict placeholder replacement.
 - `create_issue_from_template.py`: render an issue template and create the GitHub issue from the body file.
 - `create_pr_from_template.py`: render a PR template and create the GitHub PR from the body file.
+- `validate_pr_body.py`: validate a PR body against the Ora et Labora PR template contract.
 - `init_issue_workspace.py`: initialize `00_brainstorm.md`, `CURRENT.md`, and task log.
-- `bootstrap_repo_templates.py`: copy GitHub templates, blueprint docs, and workflow examples into a target repo.
+- `bootstrap_repo_templates.py`: copy GitHub templates, blueprint docs, the standalone PR-body workflow, and workflow examples into a target repo.
 - `bootstrap_repo_templates.py --visibility <profile>`: also writes the profile-aware artifact policy into `.gitignore`.
 - `collect_playwright_artifacts.py`: collect browser verification artifacts into `.project/logs/playwright/<module-id>/<run-id>/`.
 

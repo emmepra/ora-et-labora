@@ -76,6 +76,13 @@ def copy_tree(src_root: Path, dst_root: Path, force: bool) -> None:
         shutil.copyfile(src, dst)
 
 
+def copy_file(src: Path, dst: Path, force: bool) -> None:
+    if dst.exists() and not force:
+        raise SystemExit(f"Refusing to overwrite existing file without --force: {dst}")
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(src, dst)
+
+
 def artifact_policy_block(visibility: str) -> str:
     lines = [BEGIN_MARKER, f"# Visibility profile: {visibility}"]
     lines.extend(GITIGNORE_PROFILES[visibility])
@@ -110,6 +117,11 @@ def main() -> int:
     skill_root = Path(__file__).resolve().parents[1]
     bootstrap_root = skill_root / "assets" / "bootstrap"
     copy_tree(bootstrap_root, args.repo_root, args.force)
+    copy_file(
+        skill_root / "scripts" / "validate_pr_body.py",
+        args.repo_root / "scripts" / "validate_pr_body.py",
+        args.force,
+    )
     if not args.skip_gitignore:
         upsert_gitignore_policy(args.repo_root, args.visibility)
     return 0

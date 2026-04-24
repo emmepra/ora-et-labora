@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = REPO_ROOT / "scripts" / "validate_pr_body.py"
+SCRIPT = REPO_ROOT / "skills" / "ora-et-labora" / "scripts" / "validate_pr_body.py"
 SPEC = importlib.util.spec_from_file_location("validate_pr_body", SCRIPT)
 MODULE = importlib.util.module_from_spec(SPEC)
 assert SPEC is not None and SPEC.loader is not None
