@@ -88,7 +88,9 @@ Do not use this skill as a substitute for the detailed phase skills. If the task
 - Treat Playwright artifacts as required evidence for browser verification, not as disposable temp output.
 - Open implementation PRs into `dev`.
 - Implementation PRs must reference the originating issue with a GitHub closing keyword, such as `Closes #123`, so the issue closes when the PR is merged into the default branch.
+- Implementation PRs into `dev` may use agent auto-merge only after branch freshness, verification, CI/review, issue-closure, and state-logging gates are satisfied.
 - Promote `dev` to `main` through grouped release PRs, not one `main` merge per implementation PR.
+- Release PRs into `main` require explicit user approval before merge; do not enable auto-merge for stable releases by default.
 - Render GitHub issue and PR bodies from files or templates. Do not assemble complex markdown inline in a shell command.
 
 ## Artifact Ownership
@@ -157,7 +159,9 @@ Durable project knowledge includes architecture boundaries, contracts, environme
 - `main` is the stable branch.
 - implementation PRs target `dev`.
 - implementation PRs include a closing issue reference, for example `Closes #123`.
+- implementation PRs may use `gh pr merge --auto` only when all auto-merge gates are satisfied.
 - release PRs promote grouped `dev` changes to `main`.
+- release PRs require explicit user approval before merge, even when checks are green.
 
 ## Docker And Runtime Rules
 
@@ -182,8 +186,10 @@ Use templates and body files for complex GitHub markdown.
 
 Use:
 
-- `gh issue create --body-file <file>`
-- `gh pr create --body-file <file>`
+- `create_issue_from_template.py` for issue creation
+- `create_pr_from_template.py` for PR creation
+- `gh issue create --body-file <file>` only as a fallback after rendering a body file
+- `gh pr create --body-file <file>` only as a fallback after rendering a body file
 
 Avoid:
 
@@ -211,8 +217,11 @@ Use these rather than recreating structure from memory.
 Scripts live under `scripts/`:
 
 - `render_template.py`: render markdown templates with strict placeholder replacement.
+- `create_issue_from_template.py`: render an issue template and create the GitHub issue from the body file.
+- `create_pr_from_template.py`: render a PR template and create the GitHub PR from the body file.
+- `validate_pr_body.py`: validate a PR body against the Ora et Labora PR template contract.
 - `init_issue_workspace.py`: initialize `00_brainstorm.md`, `CURRENT.md`, and task log.
-- `bootstrap_repo_templates.py`: copy GitHub templates, blueprint docs, and workflow examples into a target repo.
+- `bootstrap_repo_templates.py`: copy GitHub templates, blueprint docs, the standalone PR-body workflow, and workflow examples into a target repo.
 - `bootstrap_repo_templates.py --visibility <profile>`: also writes the profile-aware artifact policy into `.gitignore`.
 - `collect_playwright_artifacts.py`: collect browser verification artifacts into `.project/logs/playwright/<module-id>/<run-id>/`.
 
@@ -225,6 +234,9 @@ Prefer scripts for deterministic file layout and template rendering.
 - "I will use one log file for every branch."
 - "I will open a PR to `main` for normal feature work."
 - "I will open the PR without `Closes #<issue>` and close the issue manually later."
+- "I will skip the wrapper script and hand-write the issue or PR body inline."
+- "I will enable auto-merge without checking CI, reviews, branch freshness, and task state."
+- "I will auto-merge the release PR into `main` because checks are green."
 - "I will publish `.project/` in a public repo because it is only process state."
 - "I will claim frontend verification without browser evidence."
 - "I will paste complex markdown directly into `gh issue create`."

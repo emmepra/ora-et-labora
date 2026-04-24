@@ -11,6 +11,7 @@ The suite is built around a simple idea:
 - keep one issue, one branch, one worktree, and one resumable state surface
 - verify using the right modality for the change
 - make implementation PRs close their originating issues on merge
+- allow implementation PR auto-merge only after explicit safety gates
 - treat browser evidence and Docker runtime behavior as first-class operational concerns
 - choose a public/private/internal artifact policy before publishing workflow state
 - integrate into `dev`
@@ -26,7 +27,7 @@ Once the issue is shaped, the skill creates or resumes a branch-local execution 
 
 Implementation then happens inside the worktree, with verification driven by the type of change. Frontend work is not "tested" in the abstract; it is verified in the browser, with Playwright evidence collected into a stable repo-local log path. Docker-backed projects are handled with explicit worktree rules so switching branches does not turn into port collisions and stale containers.
 
-The branch flow is PR-first into `dev`, while stable promotion happens through grouped `dev` to `main` release PRs.
+The branch flow is PR-first into `dev`. Implementation PRs may use agent auto-merge only after branch freshness, verification, CI/review, issue-closure, and state-logging gates are satisfied. Stable promotion happens through grouped `dev` to `main` release PRs, and those release PRs require explicit user approval before merge.
 
 Repo creation and bootstrap are visibility-aware. Private and internal repos can version `.project/` as durable agent memory, while public repos keep `.project/` local by default and publish only sanitized contributor-facing docs and GitHub templates.
 
@@ -67,6 +68,8 @@ Repo creation and bootstrap are visibility-aware. Private and internal repos can
 - Verification is modality-specific.
 - Browser verification requires evidence, not just a claim.
 - Implementation PRs must reference and close their originating issues.
+- Implementation PR auto-merge is allowed only for eligible `dev` PRs.
+- Release PRs into `main` require explicit approval before merge.
 - Docker behavior across worktrees must be explicit.
 - Public repos keep agent-private state local unless explicitly sanitized.
 - `dev` is the integration branch.
@@ -97,7 +100,8 @@ The suite includes:
 - detailed self-contained `SKILL.md` bodies with procedure, red flags, rationalization counters, and completion checklists
 - issue, PR, release, brainstorm, current-state, and log templates
 - bootstrap assets for `.github/` and `.project/blueprint/`
-- helper scripts for template rendering, issue workspace initialization, visibility-aware bootstrap, and Playwright artifact collection
+- helper scripts for template rendering, issue/PR creation, issue workspace initialization, visibility-aware bootstrap, and Playwright artifact collection
+- a CI gate that rejects malformed implementation or release PR bodies that do not satisfy the suite contract
 
 The operating procedure is intentionally inline in the skill files. Extra files are reserved for templates, scripts, bootstrap assets, tests, and examples.
 

@@ -17,6 +17,10 @@
 - Browser evidence: {{BROWSER_EVIDENCE}}
 - CI: {{CI_VERIFICATION}}
 
+## Auto-Merge Eligibility
+
+{{AUTO_MERGE_ELIGIBILITY}}
+
 ## Blueprint Updates
 
 {{BLUEPRINT_UPDATES}}

@@ -122,6 +122,7 @@ CI/release:
 - check current CI status, not stale runs
 - distinguish "not run", "pending", "failed", and "passed"
 - for release trains, include regression, browser, migration/schema, and rollback readiness where relevant
+- for auto-merge, confirm current CI, review state, branch freshness, issue closure reference, and mergeability before enabling or performing the merge
 
 ## Browser Verification Is Required When
 
@@ -133,6 +134,22 @@ CI/release:
 - screenshots, traces, or videos are needed to prove the fix
 
 Browser verification may be skipped only when the change is provably not browser-visible, such as a backend-only test fixture or documentation-only update. If skipped, record why.
+
+## Auto-Merge Readiness
+
+Before enabling `gh pr merge --auto` or performing an immediate merge, verify the PR is actually eligible:
+
+- target branch is `dev`
+- PR is not a release PR into `main`
+- latest branch state is rebased on `origin/dev`
+- required CI is passing or pending under GitHub auto-merge
+- no requested changes, unresolved review threads, merge conflicts, blocked labels, or explicit user hold are present
+- local verification in the PR body matches the changed surface
+- browser evidence is present when frontend-visible behavior changed
+- PR body includes `Closes #<issue>` or an equivalent closing keyword
+- `CURRENT.md` and the task log record the latest verification and auto-merge decision
+
+If any item is unknown, treat auto-merge as blocked. Record the gap instead of enabling auto-merge optimistically.
 
 ## Playwright Artifact Policy
 
@@ -181,6 +198,7 @@ In the task log:
 - verification failed with a new meaningful reason
 - browser evidence was collected
 - CI result changed in a way that affects readiness
+- auto-merge was enabled, skipped, blocked, or completed
 
 In the PR:
 
@@ -188,6 +206,7 @@ In the PR:
 - browser check summary
 - browser evidence path
 - CI status
+- auto-merge eligibility or explicit reason it is not requested
 - verification gaps or skipped checks with reason
 
 ## Red Flags - Verification Not Good Enough
@@ -196,6 +215,7 @@ In the PR:
 - "I checked it manually" without artifact or exact path.
 - "The browser behavior should be fixed because the code changed."
 - "CI passed yesterday before the rebase."
+- "Auto-merge is enabled, so current verification no longer matters."
 - "The screenshot is in `/tmp` and not preserved."
 - "Frontend changed, but no browser verification was run."
 - "Docker services changed, but the old containers were used."

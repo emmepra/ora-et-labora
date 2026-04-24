@@ -1,0 +1,21 @@
+name: Validate PR Body
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+
+jobs:
+  validate-pr-body:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate PR body
+        env:
+          PR_BODY: ${{ github.event.pull_request.body || '' }}
+          BASE_BRANCH: ${{ github.base_ref || '' }}
+        run: python scripts/validate_pr_body.py --body "$PR_BODY" --base-branch "$BASE_BRANCH"

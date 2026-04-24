@@ -53,7 +53,10 @@ Do not use this skill when:
 | --- | --- |
 | Bug issue template | `.github/ISSUE_TEMPLATE/bug_report.md` |
 | Feature issue template | `.github/ISSUE_TEMPLATE/feature_request.md` |
+| Issue template config | `.github/ISSUE_TEMPLATE/config.yml` with `blank_issues_enabled: false` |
 | PR template | `.github/PULL_REQUEST_TEMPLATE.md` with a `Linked Issue` / `Closes #` section |
+| PR body validation workflow | `.github/workflows/validate-pr-body.yml` |
+| PR body validator script | `scripts/validate_pr_body.py` |
 | CI placeholder | `.github/workflows/ci.yml.example` |
 | Release placeholder | `.github/workflows/release.yml.example` |
 | Workflow blueprint | `.project/blueprint/00_workflow.md` |
@@ -104,6 +107,7 @@ Private/internal profile rule: `.project/` may be versioned, but raw browser art
    - Pass `--visibility <profile>` so `.gitignore` receives the right artifact policy.
    - Use `--force` only when overwrite is explicitly intended.
 4. Adapt placeholders.
+   - Keep the standalone PR-body validation workflow active unless the repo already has an equivalent stronger gate.
    - Replace example CI commands with project-specific commands.
    - Replace release placeholders with real release checks when known.
    - Do not leave misleading CI or release placeholders that appear production-ready.
@@ -174,6 +178,7 @@ Issue and PR formatting should be deterministic.
 Use:
 
 - templates under `.github/`
+- issue template config under `.github/ISSUE_TEMPLATE/config.yml`
 - body files
 - `gh issue create --body-file <file>`
 - `gh pr create --body-file <file>`
@@ -260,6 +265,7 @@ Use the script for baseline copying. Inspect and adapt the copied files before c
 
 - existing repo workflow inspected
 - `.github/ISSUE_TEMPLATE/` present or intentionally skipped
+- `.github/ISSUE_TEMPLATE/config.yml` disables blank issues unless intentionally overridden
 - `.github/PULL_REQUEST_TEMPLATE.md` present or intentionally skipped
 - PR template contains a linked issue / closing keyword section
 - visibility profile selected and represented in `.gitignore`
