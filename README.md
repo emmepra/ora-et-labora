@@ -25,11 +25,13 @@ When the work is nontrivial, it first turns the request into a challenge record,
 
 Once the issue is shaped, the skill creates or resumes a branch-local execution surface in `.project/`. It keeps the current state short and resumable, while pushing only meaningful deltas into the task log. That is the core memory model: small live state, sparse durable history.
 
+The key split is intentional: task-local execution state under `.project/todo/` stays local to the developer machine, while concise durable history stays in `.project/logs/` and stable operating knowledge stays in `.project/blueprint/`.
+
 Implementation then happens inside the worktree, with verification driven by the type of change. Frontend work is not "tested" in the abstract; it is verified in the browser, with Playwright evidence collected into a stable repo-local log path. Docker-backed projects are handled with explicit worktree rules so switching branches does not turn into port collisions and stale containers.
 
 The branch flow is PR-first into `dev`. Implementation PRs may use agent auto-merge only after branch freshness, verification, CI/review, issue-closure, and state-logging gates are satisfied. Stable promotion happens through grouped `dev` to `main` release PRs, and those release PRs require explicit user approval before merge.
 
-Repo creation and bootstrap are visibility-aware. Private and internal repos can version `.project/` as durable agent memory, while public repos keep `.project/` local by default and publish only sanitized contributor-facing docs and GitHub templates.
+Repo creation and bootstrap are visibility-aware. Private and internal repos can version durable `.project/` surfaces such as `.project/blueprint/` and concise `.project/logs/`, while keeping local task workspaces under `.project/todo/` local-only. Public repos keep `.project/` local by default and publish only sanitized contributor-facing docs and GitHub templates.
 
 ## The Basic Workflow
 
@@ -46,8 +48,8 @@ Repo creation and bootstrap are visibility-aware. Private and internal repos can
    - one issue
    - one branch
    - one worktree
-   - one `CURRENT.md`
-   - one append-only task log
+   - one local `CURRENT.md`
+   - one append-only versioned task log
 5. Implement.
    - work from the worktree
    - keep state resumable after context compaction
@@ -58,7 +60,7 @@ Repo creation and bootstrap are visibility-aware. Private and internal repos can
    - summarize implementation, verification, and blueprint impact
    - include `Closes #<issue>` for the originating issue
 8. Clean up after merge.
-   - archive the merged task workspace under `.project/logs/archive/<module-id>/`
+   - remove the merged local task workspace under `.project/todo/<module-id>/`
    - remove the owning worktree and local branch when safe
    - use `python scripts/close_task_workspace.py --repo-root . --module-id <module-id>` and add `--apply` only after checking the plan
 9. Release `dev` to `main` when requested.
@@ -69,6 +71,7 @@ Repo creation and bootstrap are visibility-aware. Private and internal repos can
 - Blueprint fit checks are mandatory for nontrivial work.
 - Blueprint updates are mandatory only when durable project knowledge changed.
 - Logging is delta-only.
+- Local task workspace state is not published by default.
 - Verification is modality-specific.
 - Browser verification requires evidence, not just a claim.
 - Implementation PRs must reference and close their originating issues.
@@ -107,7 +110,7 @@ The suite includes:
 - bootstrap assets for `.github/` and `.project/blueprint/`
 - helper scripts for template rendering, issue/PR creation, issue workspace initialization, visibility-aware bootstrap, and Playwright artifact collection
 - a governance helper that can plan or apply default repo settings and a standard issue label set
-- a cleanup helper that archives merged task workspaces and retires the owning worktree/local branch through a dry-run-first flow
+- a cleanup helper that removes merged local task state and retires the owning worktree/local branch through a dry-run-first flow
 - a CI gate that rejects malformed implementation or release PR bodies that do not satisfy the suite contract
 
 The operating procedure is intentionally inline in the skill files. Extra files are reserved for templates, scripts, bootstrap assets, tests, and examples.

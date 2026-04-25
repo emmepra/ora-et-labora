@@ -13,7 +13,7 @@ This is not the main execution skill for most tasks. The focused peer skills own
 
 Ora et Labora is a repo-first workflow for agentic software development. It turns rough work into durable issues, checks feasibility against the project blueprint, executes in a branch worktree, verifies with the right modality, opens PRs into `dev`, and promotes grouped releases to `main`.
 
-Core principle: important workflow state must live in the repo, not in agent memory.
+Core principle: durable workflow truth must live in the repo, while branch-local task workspace state may stay local to the developer machine.
 
 The suite intentionally keeps operative guidance inside each `SKILL.md`. Shared reusable materials are scripts and templates, not hidden procedure docs.
 
@@ -53,7 +53,7 @@ Do not use this skill as a substitute for the detailed phase skills. If the task
    - Record fit, assumptions, conflicts, and blueprint update decision.
 3. Initialize state.
    - Use `state-logging`.
-   - Create or update `CURRENT.md` and the task log.
+   - Create or update the local task workspace plus the durable task log.
 4. Start implementation branch.
    - Use `worktree-flow`.
    - Create/reuse a worktree, branch from `dev`, and keep PR target as `dev`.
@@ -65,7 +65,7 @@ Do not use this skill as a substitute for the detailed phase skills. If the task
    - Render PR body from a file or template.
 7. Close the merged task workspace.
    - Use `state-logging` and `worktree-flow`.
-   - Archive the merged task todo under `.project/logs/archive/<module-id>/` and retire the owning worktree/local branch with the cleanup helper.
+   - Retire the merged local task workspace under `.project/todo/<module-id>/` and the owning worktree/local branch with the cleanup helper.
 8. Release.
    - Use `release-train`.
    - Promote grouped `dev` work to `main` with release checks and rollback notes.
@@ -85,7 +85,7 @@ Do not use this skill as a substitute for the detailed phase skills. If the task
 - Run a blueprint fit check for every nontrivial issue before implementation starts.
 - Update `.project/blueprint/` only when durable project knowledge changes.
 - Keep logs delta-only. Do not restate information that already lives in GitHub or `CURRENT.md`.
-- Use one issue, one owning branch, one worktree, one resumable `CURRENT.md`, and one append-only log per nontrivial task.
+- Use one issue, one owning branch, one worktree, one local resumable task workspace, and one append-only log per nontrivial task.
 - Choose verification modalities based on the change type. Do not treat "tests" as a single generic step.
 - For frontend-impacting work, require browser verification locally and prefer CI browser coverage as well.
 - Treat Playwright artifacts as required evidence for browser verification, not as disposable temp output.
@@ -101,10 +101,8 @@ Do not use this skill as a substitute for the detailed phase skills. If the task
 | Artifact | Owns | Should not contain |
 | --- | --- | --- |
 | GitHub issue | problem, scope, constraints, acceptance criteria, verification plan | command logs, branch status, implementation diary |
-| `00_brainstorm.md` | challenge record, assumptions, options, risks, blueprint fit | PR status, raw command output |
-| `CURRENT.md` | current status, branch, PR, latest verification, next step, blockers | historical diary, full issue body, raw artifacts |
+| `.project/todo/<module-id>/` | local task workspace (`00_brainstorm.md`, `CURRENT.md`, draft PR body) | durable published history, raw browser artifacts |
 | task log | meaningful deltas and state transitions | every command, every edit, repeated issue text |
-| `.project/logs/archive/<module-id>/` | archived task workspace after merge cleanup | active branch state, raw temp artifacts |
 | `.project/blueprint/` | durable project model and workflow invariants | task-local notes, transient blockers |
 | PR body | implementation summary, closing issue reference, verification evidence, risks, rollback/follow-ups | unresolved template placeholders, raw traces |
 | release PR | grouped scope, release checks, migrations, rollback | individual implementation diaries |
@@ -115,7 +113,7 @@ Ora et Labora supports three repository modes:
 
 | Profile | Use for | Default artifact policy |
 | --- | --- | --- |
-| `private` | personal/private projects | version `.project/blueprint`, `.project/todo`, and concise `.project/logs`; ignore worktrees and raw browser artifacts |
+| `private` | personal/private projects | version `.project/blueprint` and concise `.project/logs`; keep `.project/todo`, `.project/worktrees`, and optional local archives local-only |
 | `internal` | organization-visible private projects | same as private, but avoid personal notes and write for broader internal readers |
 | `public` | open source or public portfolio work | version `.github` and sanitized public docs; keep `.project`, local issue workspaces, raw browser artifacts, and private agent instructions local by default |
 
@@ -226,7 +224,7 @@ Scripts live under `scripts/`:
 - `configure_repo_governance.py`: plan or apply default GitHub repo settings and a standard Ora et Labora issue label set.
 - `validate_pr_body.py`: validate a PR body against the Ora et Labora PR template contract.
 - `init_issue_workspace.py`: initialize `00_brainstorm.md`, `CURRENT.md`, and task log.
-- `close_task_workspace.py`: archive a merged task workspace and retire the owning worktree/local branch through a dry-run-first cleanup flow.
+- `close_task_workspace.py`: retire merged local task state and the owning worktree/local branch through a dry-run-first cleanup flow.
 - `bootstrap_repo_templates.py`: copy GitHub templates, blueprint docs, the standalone PR-body workflow, and workflow examples into a target repo.
 - `bootstrap_repo_templates.py --visibility <profile>`: also writes the profile-aware artifact policy into `.gitignore`.
 - `collect_playwright_artifacts.py`: collect browser verification artifacts into `.project/logs/playwright/<module-id>/<run-id>/`.
@@ -263,6 +261,6 @@ For any nontrivial task, completion requires:
 - PR opened or updated against `dev`
 - PR body references and closes the originating issue
 - task state and log reflect the latest truth
-- merged task work is archived and cleaned up when the branch is complete
+- merged local task state is retired and the worktree is cleaned up when the branch is complete
 
 If any item is intentionally skipped, state why.

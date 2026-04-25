@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Archive merged task state and clean up the owning worktree and local branch."""
+"""Retire merged local task state and clean up the owning worktree and local branch."""
 
 from __future__ import annotations
 
@@ -29,8 +29,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--archive-root",
-        default=".project/logs/archive",
-        help="Archive root relative to repo root.",
+        help="Optional local archive root relative to repo root. When omitted, task state is deleted instead of archived.",
     )
     parser.add_argument("--keep-worktree", action="store_true")
     parser.add_argument("--keep-branch", action="store_true")
@@ -221,7 +220,7 @@ def plan_lines(
     merged_into: str,
     merged: bool,
     todo_dir: Path,
-    archive_dir: Path,
+    archive_dir: Optional[Path],
     worktree_dir: Path,
     keep_todo: bool,
     keep_worktree: bool,
@@ -233,12 +232,15 @@ def plan_lines(
         f"- branch: {branch}",
         f"- merged into {merged_into}: {'yes' if merged else 'no'}",
         f"- todo dir: {todo_dir}",
-        f"- archive dir: {archive_dir}",
+        f"- task-state cleanup: {'archive to ' + str(archive_dir) if archive_dir else 'delete local todo dir'}",
         f"- worktree dir: {worktree_dir}",
         "",
     ]
     if not keep_todo:
-        lines.append(f"$ archive {todo_dir} -> {archive_dir}")
+        if archive_dir:
+            lines.append(f"$ archive {todo_dir} -> {archive_dir}")
+        else:
+            lines.append("$ " + shlex.join(["rm", "-rf", str(todo_dir)]))
     if not keep_worktree:
         lines.append("$ " + shlex.join(["git", "worktree", "remove", str(worktree_dir)]))
     if not keep_branch:
@@ -276,26 +278,31 @@ def delete_branch(repo_root: Path, branch: str, force: bool) -> None:
     git(repo_root, "branch", "-D" if force else "-d", branch)
 
 
-def archive_task(
+def retire_task_state(
     todo_dir: Path,
-    archive_dir: Path,
     source_log_path: Path,
     root_log_path: Path,
     module_id: str,
     branch: str,
     merged_into: str,
-    archive_rel: str,
+    archive_dir: Optional[Path],
+    archive_rel: Optional[str],
 ) -> None:
-    archive_dir.parent.mkdir(parents=True, exist_ok=True)
-    if archive_dir.exists():
-        raise SystemExit(f"Archive destination already exists: {archive_dir}")
-    current_path = todo_dir / "CURRENT.md"
-    update_current_for_archive(current_path, archive_rel)
-    shutil.move(str(todo_dir), str(archive_dir))
     ensure_root_log(root_log_path, source_log_path, module_id)
+    if archive_dir and archive_rel:
+        archive_dir.parent.mkdir(parents=True, exist_ok=True)
+        if archive_dir.exists():
+            raise SystemExit(f"Archive destination already exists: {archive_dir}")
+        current_path = todo_dir / "CURRENT.md"
+        update_current_for_archive(current_path, archive_rel)
+        shutil.move(str(todo_dir), str(archive_dir))
+        suffix = f"archive:{archive_rel} | task-state:archived | note:Archived local task workspace after merge cleanup."
+    else:
+        shutil.rmtree(todo_dir)
+        suffix = "task-state:removed | note:Removed local task workspace after merge cleanup."
     append_log(
         root_log_path,
-        f"- {date.today().isoformat()} | state:closed | branch:{branch} | merged-into:{merged_into} | archive:{archive_rel} | note:Archived task state after merge cleanup.\n",
+        f"- {date.today().isoformat()} | state:closed | branch:{branch} | merged-into:{merged_into} | {suffix}\n",
     )
 
 def apply_cleanup(
@@ -308,19 +315,19 @@ def apply_cleanup(
     worktree_dir: Path,
 ) -> None:
     repo_root = args.repo_root.resolve()
-    archive_dir = repo_root / args.archive_root / args.module_id
-    archive_rel = str(Path(args.archive_root) / args.module_id)
+    archive_dir = repo_root / args.archive_root / args.module_id if args.archive_root else None
+    archive_rel = str(Path(args.archive_root) / args.module_id) if args.archive_root else None
 
     ensure_safe_to_apply(repo_root, branch, merged, args.force)
     if not args.keep_todo:
-        archive_task(
+        retire_task_state(
             source_todo_dir,
-            archive_dir,
             source_log_path,
             root_log_path,
             args.module_id,
             branch,
             args.merged_into,
+            archive_dir,
             archive_rel,
         )
     if not args.keep_worktree:
@@ -345,7 +352,7 @@ def main() -> int:
 
     merged_ref = args.merged_into if ref_exists(repo_root, args.merged_into) else args.merged_into.removeprefix("origin/")
     merged = branch_exists(repo_root, branch) and ref_exists(repo_root, merged_ref) and branch_is_merged(repo_root, branch, merged_ref)
-    archive_dir = repo_root / args.archive_root / args.module_id
+    archive_dir = repo_root / args.archive_root / args.module_id if args.archive_root else None
     prune_list = prune_candidates(repo_root, merged_ref, exclude={branch}) if args.prune_merged_branches else []
 
     if not args.apply:

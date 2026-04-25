@@ -86,11 +86,12 @@ class CloseTaskWorkspaceTests(unittest.TestCase):
                 text=True,
             )
             self.assertIn("Cleanup plan for module 17", result.stdout)
-            self.assertIn(".project/logs/archive/17", result.stdout)
+            self.assertIn("delete local todo dir", result.stdout)
+            self.assertIn("rm -rf", result.stdout)
             self.assertIn("git worktree remove", result.stdout)
             self.assertIn("git branch -d feat/17-cleanup", result.stdout)
 
-    def test_apply_archives_and_removes_worktree_and_branch(self) -> None:
+    def test_apply_removes_local_task_state_and_cleans_branch(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             repo = self.init_repo(Path(tmp))
             worktree = self.make_task_branch(repo)
@@ -112,12 +113,43 @@ class CloseTaskWorkspaceTests(unittest.TestCase):
                 text=True,
             )
             self.assertFalse((repo / ".project" / "todo" / "17").exists())
-            self.assertTrue((repo / ".project" / "logs" / "archive" / "17" / "CURRENT.md").exists())
+            self.assertFalse((repo / ".project" / "logs" / "archive" / "17").exists())
             self.assertFalse(worktree.exists())
             branches = git(repo, "branch", "--list", "feat/17-cleanup").stdout.strip()
             self.assertEqual(branches, "")
             log_text = (repo / ".project" / "logs" / "17.md").read_text()
             self.assertIn("state:closed", log_text)
+            self.assertIn("task-state:removed", log_text)
+
+    def test_apply_can_archive_task_state_when_requested(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = self.init_repo(Path(tmp))
+            worktree = self.make_task_branch(repo)
+            git(repo, "merge", "--no-ff", "feat/17-cleanup", "-m", "merge feature")
+            subprocess.run(
+                [
+                    "python",
+                    str(SCRIPT),
+                    "--repo-root",
+                    str(repo),
+                    "--module-id",
+                    "17",
+                    "--merged-into",
+                    "dev",
+                    "--archive-root",
+                    ".project/local-archive",
+                    "--apply",
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertFalse((repo / ".project" / "todo" / "17").exists())
+            self.assertTrue((repo / ".project" / "local-archive" / "17" / "CURRENT.md").exists())
+            self.assertFalse(worktree.exists())
+            log_text = (repo / ".project" / "logs" / "17.md").read_text()
+            self.assertIn("task-state:archived", log_text)
+            self.assertIn(".project/local-archive/17", log_text)
 
     def test_apply_refuses_when_branch_not_merged(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

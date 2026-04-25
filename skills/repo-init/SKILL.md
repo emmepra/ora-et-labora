@@ -114,13 +114,13 @@ Use one of these profiles:
 
 | Profile | Default for | Versioned workflow state | Ignored/local workflow state |
 | --- | --- | --- | --- |
-| `private` | personal private repos | `.project/blueprint/**`, `.project/todo/**`, `.project/logs/**` summaries, `.github/**`, project `AGENTS.md` when useful | `.project/worktrees/**`, raw Playwright/browser payloads, secrets, `.env`, local-only overrides |
-| `internal` | organization-only repos | same as `private`, but assume broader internal readers and avoid personal/private notes | `.project/worktrees/**`, raw Playwright/browser payloads, secrets, local-only overrides |
+| `private` | personal private repos | `.project/blueprint/**`, concise `.project/logs/**` summaries, `.github/**`, project `AGENTS.md` when useful | `.project/todo/**`, `.project/worktrees/**`, optional local archives, raw Playwright/browser payloads, secrets, `.env`, local-only overrides |
+| `internal` | organization-only repos | same as `private`, but assume broader internal readers and avoid personal/private notes | `.project/todo/**`, `.project/worktrees/**`, optional local archives, raw Playwright/browser payloads, secrets, local-only overrides |
 | `public` | open source or public portfolio repos | `.github/**`, sanitized public docs, optionally a short public `AGENTS.md` if contributor-safe | `.project/**` by default, `AGENTS.local.md`, local challenge logs, raw Playwright/browser payloads, private planning notes |
 
 For public repos, do not publish private agent operational state by default. Translate stable, contributor-useful knowledge into public docs such as `CONTRIBUTING.md`, `SECURITY.md`, `docs/architecture.md`, `docs/testing.md`, or `docs/release.md`. Keep `.project/` local unless the user intentionally approves a sanitized subset.
 
-For private and internal repos, `.project/` can be part of the repository because the workflow memory is useful to future agents. Even there, raw browser artifacts should be handled carefully: commit concise summaries and evidence paths; keep large traces, videos, HAR files, and screenshots local unless a project explicitly wants curated artifacts versioned.
+For private and internal repos, durable workflow memory can still be part of the repository, but not every local working surface should be published. Keep `.project/blueprint/**` and concise `.project/logs/**` versioned; keep `.project/todo/**`, `.project/worktrees/**`, and any local archive space on the developer machine. Raw browser artifacts should still be handled carefully: commit concise summaries and evidence paths; keep large traces, videos, HAR files, and screenshots local unless a project explicitly wants curated artifacts versioned.
 
 ## Confirmation Gate
 
