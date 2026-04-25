@@ -136,6 +136,7 @@ After the PR merges into `dev` and the task is complete:
 - remove the merged local task workspace with `../ora-et-labora/scripts/close_task_workspace.py --repo-root . --module-id <module-id>`
 - review the dry-run plan before adding `--apply`
 - let the helper retire the owning worktree and local branch instead of ad hoc cleanup commands
+- do not create a new versioned cleanup commit just to record that the PR merged; GitHub already owns that state
 
 ## Auto-Merge Policy
 
