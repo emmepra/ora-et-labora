@@ -60,6 +60,7 @@ Use one source of truth per concern:
 - GitHub issue: issue scope, acceptance criteria, and verification plan
 - local task workspace (`00_brainstorm.md`, `CURRENT.md`): design tradeoffs, next step, blockers, and branch-local resumability
 - task log: approach changes, blocker transitions, verification result changes, PR/release state changes
+- GitHub issue and PR: final merged/closed state after integration
 - PR: implementation summary, user-facing verification evidence, risk, rollback, follow-ups
 - release PR: promotion scope, included PRs, release checks, rollback plan
 
@@ -103,8 +104,7 @@ Meaningful deltas:
 - verification failed
 - verification passed after previously failing or being pending
 - browser evidence was collected
-- PR opened, retargeted, marked ready, merged, or blocked
-- originating issue was closed by PR merge or failed to close as expected
+- PR opened, retargeted, marked ready, or blocked
 - release train prepared, checked, or merged
 - blueprint changed because durable knowledge changed
 
@@ -166,10 +166,10 @@ Prefer searchable event labels:
    - task log should include the verification state.
    - PR body should include the originating issue closing reference.
 7. After merge or release, close the loop.
-   - Record final merge/release state.
    - Confirm the originating issue closed when the implementation PR merged, or record the blocker/follow-up if it did not.
    - Update the local task workspace to done if the project keeps it briefly during handoff.
    - When the task branch is truly finished, use `../ora-et-labora/scripts/close_task_workspace.py --repo-root . --module-id <module-id>` to remove the local task workspace and retire the owning worktree/local branch. Review the dry-run plan first, then add `--apply`.
+   - Standard cleanup should not create a new versioned task-log delta just to record that the PR merged; GitHub issue and PR state already own that closeout record.
 
 ## Context Compaction Recovery
 

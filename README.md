@@ -76,7 +76,7 @@ Repo creation and bootstrap are visibility-aware. Private and internal repos can
 - Browser verification requires evidence, not just a claim.
 - Implementation PRs must reference and close their originating issues.
 - Implementation PR auto-merge is allowed only for eligible `dev` PRs.
-- Merged task work should be archived and retired deliberately, not left as lingering worktrees.
+- Merged task work should be retired deliberately, without creating extra versioned cleanup churn.
 - Release PRs into `main` require explicit approval before merge.
 - Docker behavior across worktrees must be explicit.
 - Public repos keep agent-private state local unless explicitly sanitized.

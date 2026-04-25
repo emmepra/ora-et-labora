@@ -118,8 +118,8 @@ class CloseTaskWorkspaceTests(unittest.TestCase):
             branches = git(repo, "branch", "--list", "feat/17-cleanup").stdout.strip()
             self.assertEqual(branches, "")
             log_text = (repo / ".project" / "logs" / "17.md").read_text()
-            self.assertIn("state:closed", log_text)
-            self.assertIn("task-state:removed", log_text)
+            self.assertNotIn("state:closed", log_text)
+            self.assertNotIn("task-state:removed", log_text)
 
     def test_apply_can_archive_task_state_when_requested(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -148,8 +148,8 @@ class CloseTaskWorkspaceTests(unittest.TestCase):
             self.assertTrue((repo / ".project" / "local-archive" / "17" / "CURRENT.md").exists())
             self.assertFalse(worktree.exists())
             log_text = (repo / ".project" / "logs" / "17.md").read_text()
-            self.assertIn("task-state:archived", log_text)
-            self.assertIn(".project/local-archive/17", log_text)
+            self.assertNotIn("task-state:archived", log_text)
+            self.assertNotIn(".project/local-archive/17", log_text)
 
     def test_apply_refuses_when_branch_not_merged(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

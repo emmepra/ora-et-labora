@@ -8,7 +8,6 @@ import shlex
 import shutil
 import subprocess
 import sys
-from datetime import date
 from pathlib import Path
 from typing import Optional
 
@@ -169,22 +168,6 @@ def update_current_for_archive(current_path: Path, archive_rel: str) -> None:
     current_path.write_text("\n".join(new_lines) + "\n")
 
 
-def append_log(log_path: Path, message: str) -> None:
-    log_path.parent.mkdir(parents=True, exist_ok=True)
-    with log_path.open("a") as handle:
-        handle.write(message)
-
-
-def ensure_root_log(log_path: Path, source_log_path: Path, module_id: str) -> None:
-    if log_path.exists():
-        return
-    log_path.parent.mkdir(parents=True, exist_ok=True)
-    if source_log_path.exists() and source_log_path != log_path:
-        shutil.copy2(source_log_path, log_path)
-        return
-    log_path.write_text(f"# Task Log: {module_id}\n")
-
-
 def active_worktree_branches(repo_root: Path) -> set[str]:
     result = git(repo_root, "worktree", "list", "--porcelain")
     branches: set[str] = set()
@@ -280,15 +263,9 @@ def delete_branch(repo_root: Path, branch: str, force: bool) -> None:
 
 def retire_task_state(
     todo_dir: Path,
-    source_log_path: Path,
-    root_log_path: Path,
-    module_id: str,
-    branch: str,
-    merged_into: str,
     archive_dir: Optional[Path],
     archive_rel: Optional[str],
 ) -> None:
-    ensure_root_log(root_log_path, source_log_path, module_id)
     if archive_dir and archive_rel:
         archive_dir.parent.mkdir(parents=True, exist_ok=True)
         if archive_dir.exists():
@@ -296,22 +273,14 @@ def retire_task_state(
         current_path = todo_dir / "CURRENT.md"
         update_current_for_archive(current_path, archive_rel)
         shutil.move(str(todo_dir), str(archive_dir))
-        suffix = f"archive:{archive_rel} | task-state:archived | note:Archived local task workspace after merge cleanup."
     else:
         shutil.rmtree(todo_dir)
-        suffix = "task-state:removed | note:Removed local task workspace after merge cleanup."
-    append_log(
-        root_log_path,
-        f"- {date.today().isoformat()} | state:closed | branch:{branch} | merged-into:{merged_into} | {suffix}\n",
-    )
 
 def apply_cleanup(
     args: argparse.Namespace,
     branch: str,
     merged: bool,
     source_todo_dir: Path,
-    source_log_path: Path,
-    root_log_path: Path,
     worktree_dir: Path,
 ) -> None:
     repo_root = args.repo_root.resolve()
@@ -322,11 +291,6 @@ def apply_cleanup(
     if not args.keep_todo:
         retire_task_state(
             source_todo_dir,
-            source_log_path,
-            root_log_path,
-            args.module_id,
-            branch,
-            args.merged_into,
             archive_dir,
             archive_rel,
         )
@@ -343,12 +307,11 @@ def apply_cleanup(
 def main() -> int:
     args = parse_args()
     repo_root = args.repo_root.resolve()
-    branch, source_todo_dir, source_log_path, worktree_dir = resolve_task_state(
+    branch, source_todo_dir, _source_log_path, worktree_dir = resolve_task_state(
         repo_root,
         args.module_id,
         args.branch,
     )
-    _, root_log_path = path_for_module(repo_root, args.module_id)
 
     merged_ref = args.merged_into if ref_exists(repo_root, args.merged_into) else args.merged_into.removeprefix("origin/")
     merged = branch_exists(repo_root, branch) and ref_exists(repo_root, merged_ref) and branch_is_merged(repo_root, branch, merged_ref)
@@ -381,8 +344,6 @@ def main() -> int:
         branch,
         merged,
         source_todo_dir,
-        source_log_path,
-        root_log_path,
         worktree_dir,
     )
     print(f"Closed and cleaned up task workspace for module {args.module_id}.")
