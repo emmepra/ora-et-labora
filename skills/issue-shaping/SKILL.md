@@ -11,7 +11,7 @@ Use this skill before implementation starts. This skill is the entry point for t
 
 Issue shaping prevents the agent from converting vague intent into code too early. The output is not a solution; it is an implementation-ready problem frame with constraints, acceptance checks, risk notes, and a clean issue body.
 
-Core principle: if another agent cannot start from the shaped issue plus `.project/todo/<module-id>/00_brainstorm.md`, the issue is not shaped enough.
+Core principle: if another agent cannot start from the shaped issue plus the local challenge record in `.project/todo/<module-id>/00_brainstorm.md`, the issue is not shaped enough.
 
 This skill is intentionally self-contained. Follow this file for the shaping procedure.
 
@@ -48,7 +48,7 @@ Do not use this skill for:
 
 - clarify the problem and intended outcome before code changes
 - capture constraints, non-goals, risks, unknowns, and acceptance checks
-- produce or update `.project/todo/<module-id>/00_brainstorm.md`
+- produce or update the local challenge record at `.project/todo/<module-id>/00_brainstorm.md`
 - draft or refine the GitHub issue body using the issue wrapper or a rendered body file
 - identify the likely verification modalities early
 - leave a clean handoff for blueprint checking and worktree setup

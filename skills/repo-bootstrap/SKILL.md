@@ -75,8 +75,8 @@ Use these profiles:
 
 | Profile | Use for | Publish by default | Keep local/ignored by default |
 | --- | --- | --- | --- |
-| `private` | private personal repos | `.project/blueprint/**`, `.project/todo/**`, concise `.project/logs/**`, `.github/**`, project `AGENTS.md` | `.project/worktrees/**`, raw Playwright traces/videos/HAR/screenshots, secrets |
-| `internal` | organization-internal repos | same as `private`, but written for broader internal readers | `.project/worktrees/**`, raw Playwright payloads, secrets, personal notes |
+| `private` | private personal repos | `.project/blueprint/**`, concise `.project/logs/**`, `.github/**`, project `AGENTS.md` | `.project/todo/**`, `.project/worktrees/**`, optional local archives, raw Playwright traces/videos/HAR/screenshots, secrets |
+| `internal` | organization-internal repos | same as `private`, but written for broader internal readers | `.project/todo/**`, `.project/worktrees/**`, optional local archives, raw Playwright payloads, secrets, personal notes |
 | `public` | open source or public portfolio repos | `.github/**`, public docs, sanitized contributor-facing `AGENTS.md` only if useful | `.project/**`, `AGENTS.local.md`, local planning logs, raw Playwright payloads, private operating notes |
 
 If the remote exists, inspect visibility when practical:
@@ -89,7 +89,7 @@ If there is no remote, or visibility cannot be determined, ask the user before a
 
 Public profile rule: `.project/` is local operational state by default. Do not commit it unless the user explicitly approves a sanitized subset. Stable guidance that public contributors need should move into normal public surfaces such as `CONTRIBUTING.md`, `SECURITY.md`, `docs/architecture.md`, `docs/testing.md`, and `docs/release.md`.
 
-Private/internal profile rule: `.project/` may be versioned, but raw browser artifacts remain controlled. Commit summaries and evidence paths; keep large Playwright traces, videos, HAR files, and screenshots ignored unless the repo explicitly curates them.
+Private/internal profile rule: version the durable workflow surfaces, not every local working surface. Commit `.project/blueprint/**` and concise `.project/logs/**`; keep `.project/todo/**`, `.project/worktrees/**`, and any local archive space ignored. Raw browser artifacts remain controlled: commit summaries and evidence paths; keep large Playwright traces, videos, HAR files, and screenshots ignored unless the repo explicitly curates them.
 
 ## Bootstrap Procedure
 

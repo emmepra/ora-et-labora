@@ -13,6 +13,10 @@ END_MARKER = "# END Ora et Labora artifact policy"
 
 GITIGNORE_PROFILES = {
     "private": [
+        "# Local per-task workspace state stays on the developer machine.",
+        ".project/todo/",
+        ".project/logs/archive/",
+        "",
         "# Local worktree checkouts are never repository content.",
         ".project/worktrees/",
         "",
@@ -28,6 +32,10 @@ GITIGNORE_PROFILES = {
         "test-results/",
     ],
     "internal": [
+        "# Local per-task workspace state stays on the developer machine.",
+        ".project/todo/",
+        ".project/logs/archive/",
+        "",
         "# Local worktree checkouts are never repository content.",
         ".project/worktrees/",
         "",

@@ -95,6 +95,7 @@ Worktree folder names should avoid slashes:
    - Do not accidentally commit from the main checkout.
 5. Initialize or update branch-local `.project` state inside the worktree.
    - Write `.project/todo`, `.project/logs`, and `.project/blueprint` in the assigned worktree checkout for branch work.
+   - Treat `.project/todo` as local task workspace state, not published repo history.
 6. Open a draft PR early when the branch will be active for more than a tiny fix.
    - Base: `dev`.
    - Standard path: use `../ora-et-labora/scripts/create_pr_from_template.py`.
@@ -132,7 +133,7 @@ After the PR merges into `dev` and the task is complete:
 
 - sync the repo/worktree state to current `dev`
 - confirm the originating issue closed as expected
-- archive the merged task workspace with `../ora-et-labora/scripts/close_task_workspace.py --repo-root . --module-id <module-id>`
+- remove the merged local task workspace with `../ora-et-labora/scripts/close_task_workspace.py --repo-root . --module-id <module-id>`
 - review the dry-run plan before adding `--apply`
 - let the helper retire the owning worktree and local branch instead of ad hoc cleanup commands
 
