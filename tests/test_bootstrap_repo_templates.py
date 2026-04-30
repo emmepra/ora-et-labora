@@ -38,6 +38,8 @@ class BootstrapRepoTemplatesTests(unittest.TestCase):
             self.assertIn("python scripts/validate_pr_body.py", pr_workflow)
             gitignore = (repo_root / ".gitignore").read_text()
             self.assertIn("Visibility profile: private", gitignore)
+            self.assertIn(".project/todo/", gitignore)
+            self.assertIn(".project/logs/archive/", gitignore)
             self.assertIn(".project/worktrees/", gitignore)
             self.assertNotIn("\n.project/\n", f"\n{gitignore}")
 
@@ -149,6 +151,7 @@ Revert the release merge commit on main if needed.
             self.assertIn(".project/", gitignore)
             self.assertIn("AGENTS.local.md", gitignore)
             self.assertIn("playwright-report/", gitignore)
+            self.assertNotIn(".project/todo/", gitignore)
 
     def test_visibility_policy_replaces_existing_block(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

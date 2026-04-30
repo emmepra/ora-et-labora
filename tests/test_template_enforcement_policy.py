@@ -41,6 +41,29 @@ class TemplateEnforcementPolicyTests(unittest.TestCase):
         validator = (REPO_ROOT / "skills" / "ora-et-labora" / "scripts" / "validate_pr_body.py")
         self.assertTrue(validator.exists())
 
+    def test_repo_init_and_bootstrap_reference_governance_helper(self) -> None:
+        repo_init = (REPO_ROOT / "skills" / "repo-init" / "SKILL.md").read_text()
+        repo_bootstrap = (REPO_ROOT / "skills" / "repo-bootstrap" / "SKILL.md").read_text()
+        self.assertIn("configure_repo_governance.py", repo_init)
+        self.assertIn("configure_repo_governance.py", repo_bootstrap)
+
+    def test_suite_docs_reference_cleanup_helper(self) -> None:
+        suite_index = (REPO_ROOT / "skills" / "ora-et-labora" / "SKILL.md").read_text()
+        state_logging = (REPO_ROOT / "skills" / "state-logging" / "SKILL.md").read_text()
+        worktree_flow = (REPO_ROOT / "skills" / "worktree-flow" / "SKILL.md").read_text()
+        self.assertIn("close_task_workspace.py", suite_index)
+        self.assertIn("close_task_workspace.py", state_logging)
+        self.assertIn("close_task_workspace.py", worktree_flow)
+
+    def test_visibility_docs_keep_task_workspaces_local(self) -> None:
+        repo_init = (REPO_ROOT / "skills" / "repo-init" / "SKILL.md").read_text()
+        repo_bootstrap = (REPO_ROOT / "skills" / "repo-bootstrap" / "SKILL.md").read_text()
+        suite_index = (REPO_ROOT / "skills" / "ora-et-labora" / "SKILL.md").read_text()
+        self.assertIn(".project/todo/**", repo_init)
+        self.assertIn("local-only", repo_init)
+        self.assertIn(".project/todo/**", repo_bootstrap)
+        self.assertIn("keep `.project/todo", suite_index)
+
 
 if __name__ == "__main__":
     unittest.main()

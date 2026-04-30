@@ -9,9 +9,9 @@ Use this skill whenever a task has enough scope to need resumable state.
 
 ## Overview
 
-State logging keeps work recoverable after context compaction without turning the repo into a noisy command transcript. The live state and the historical log are separate artifacts with different jobs.
+State logging keeps work recoverable after context compaction without turning the repo into a noisy command transcript. The local task workspace and the durable log are separate artifacts with different jobs.
 
-Core principle: `CURRENT.md` answers "what is the next useful action right now?" The task log answers "what changed that future agents must not lose?"
+Core principle: the local task workspace answers "what is the next useful action right now?" The task log answers "what changed that future agents must not lose?"
 
 This skill is self-contained. Follow this file for the logging procedure.
 
@@ -46,9 +46,9 @@ Do not use this skill for:
 
 | Artifact | Role | Update style |
 | --- | --- | --- |
-| `.project/todo/<module-id>/CURRENT.md` | resumable live state | overwrite in place |
+| `.project/todo/<module-id>/CURRENT.md` | local resumable live state | overwrite in place |
 | `.project/logs/<module-id>.md` | durable meaningful history | append only |
-| `.project/todo/<module-id>/00_brainstorm.md` | challenge record and fit check | update during shaping/fit |
+| `.project/todo/<module-id>/00_brainstorm.md` | local challenge record and fit check | update during shaping/fit |
 | GitHub issue | work contract | update when scope changes |
 | Pull request | implementation and verification summary | update before review/merge |
 | Release PR | grouped stable promotion | update during release |
@@ -58,15 +58,15 @@ Do not use this skill for:
 Use one source of truth per concern:
 
 - GitHub issue: issue scope, acceptance criteria, and verification plan
-- `00_brainstorm.md`: design tradeoffs, assumptions, risk, feasibility, and blueprint fit
-- `CURRENT.md`: current status, next step, blocker, branch, PR, latest verification result
+- local task workspace (`00_brainstorm.md`, `CURRENT.md`): design tradeoffs, next step, blockers, and branch-local resumability
 - task log: approach changes, blocker transitions, verification result changes, PR/release state changes
+- GitHub issue and PR: final merged/closed state after integration
 - PR: implementation summary, user-facing verification evidence, risk, rollback, follow-ups
 - release PR: promotion scope, included PRs, release checks, rollback plan
 
 ## `CURRENT.md` Rules
 
-`CURRENT.md` must stay short. It should be readable in under one minute.
+`CURRENT.md` must stay short. It is local task-state, not a published changelog, and it should be readable in under one minute.
 
 Keep:
 
@@ -104,8 +104,7 @@ Meaningful deltas:
 - verification failed
 - verification passed after previously failing or being pending
 - browser evidence was collected
-- PR opened, retargeted, marked ready, merged, or blocked
-- originating issue was closed by PR merge or failed to close as expected
+- PR opened, retargeted, marked ready, or blocked
 - release train prepared, checked, or merged
 - blueprint changed because durable knowledge changed
 
@@ -150,7 +149,7 @@ Prefer searchable event labels:
    - Keep it stable across brainstorm, current state, log, branch, PR, and evidence paths.
 2. Initialize state if missing.
    - Use `../ora-et-labora/scripts/init_issue_workspace.py` when creating the standard files.
-   - Create `.project/todo/<module-id>/CURRENT.md`.
+   - Create the local `.project/todo/<module-id>/CURRENT.md`.
    - Create `.project/logs/<module-id>.md`.
 3. Before substantial work, update `CURRENT.md`.
    - Status should reflect the active phase.
@@ -167,16 +166,17 @@ Prefer searchable event labels:
    - task log should include the verification state.
    - PR body should include the originating issue closing reference.
 7. After merge or release, close the loop.
-   - Record final merge/release state.
    - Confirm the originating issue closed when the implementation PR merged, or record the blocker/follow-up if it did not.
-   - Update `CURRENT.md` to done or archived if the project uses that convention.
+   - Update the local task workspace to done if the project keeps it briefly during handoff.
+   - When the task branch is truly finished, use `../ora-et-labora/scripts/close_task_workspace.py --repo-root . --module-id <module-id>` to remove the local task workspace and retire the owning worktree/local branch. Review the dry-run plan first, then add `--apply`.
+   - Standard cleanup should not create a new versioned task-log delta just to record that the PR merged; GitHub issue and PR state already own that closeout record.
 
 ## Context Compaction Recovery
 
 When resuming after compaction:
 
 1. Read the closest `AGENTS.md`.
-2. Read `.project/todo/<module-id>/CURRENT.md`.
+2. Read `.project/todo/<module-id>/CURRENT.md` if the local task workspace still exists.
 3. Read the last meaningful entries in `.project/logs/<module-id>.md`.
 4. Inspect the branch and PR state.
 5. Run only the commands needed to refresh reality.
@@ -210,6 +210,7 @@ All of these mean the state surface is no longer trustworthy.
 ## Templates And Tools
 
 - `../ora-et-labora/scripts/init_issue_workspace.py`
+- `../ora-et-labora/scripts/close_task_workspace.py`
 - `../ora-et-labora/assets/templates/current.md`
 - `../ora-et-labora/assets/templates/log.md`
 

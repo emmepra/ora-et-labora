@@ -114,13 +114,13 @@ Use one of these profiles:
 
 | Profile | Default for | Versioned workflow state | Ignored/local workflow state |
 | --- | --- | --- | --- |
-| `private` | personal private repos | `.project/blueprint/**`, `.project/todo/**`, `.project/logs/**` summaries, `.github/**`, project `AGENTS.md` when useful | `.project/worktrees/**`, raw Playwright/browser payloads, secrets, `.env`, local-only overrides |
-| `internal` | organization-only repos | same as `private`, but assume broader internal readers and avoid personal/private notes | `.project/worktrees/**`, raw Playwright/browser payloads, secrets, local-only overrides |
+| `private` | personal private repos | `.project/blueprint/**`, concise `.project/logs/**` summaries, `.github/**`, project `AGENTS.md` when useful | `.project/todo/**`, `.project/worktrees/**`, optional local archives, raw Playwright/browser payloads, secrets, `.env`, local-only overrides |
+| `internal` | organization-only repos | same as `private`, but assume broader internal readers and avoid personal/private notes | `.project/todo/**`, `.project/worktrees/**`, optional local archives, raw Playwright/browser payloads, secrets, local-only overrides |
 | `public` | open source or public portfolio repos | `.github/**`, sanitized public docs, optionally a short public `AGENTS.md` if contributor-safe | `.project/**` by default, `AGENTS.local.md`, local challenge logs, raw Playwright/browser payloads, private planning notes |
 
 For public repos, do not publish private agent operational state by default. Translate stable, contributor-useful knowledge into public docs such as `CONTRIBUTING.md`, `SECURITY.md`, `docs/architecture.md`, `docs/testing.md`, or `docs/release.md`. Keep `.project/` local unless the user intentionally approves a sanitized subset.
 
-For private and internal repos, `.project/` can be part of the repository because the workflow memory is useful to future agents. Even there, raw browser artifacts should be handled carefully: commit concise summaries and evidence paths; keep large traces, videos, HAR files, and screenshots local unless a project explicitly wants curated artifacts versioned.
+For private and internal repos, durable workflow memory can still be part of the repository, but not every local working surface should be published. Keep `.project/blueprint/**` and concise `.project/logs/**` versioned; keep `.project/todo/**`, `.project/worktrees/**`, and any local archive space on the developer machine. Raw browser artifacts should still be handled carefully: commit concise summaries and evidence paths; keep large traces, videos, HAR files, and screenshots local unless a project explicitly wants curated artifacts versioned.
 
 ## Confirmation Gate
 
@@ -186,6 +186,7 @@ Do not create the GitHub repo before this approval.
    - For `public` repos, keep `.project/` local by default and translate stable guidance into public docs if requested.
    - Add CI/release placeholders appropriate for the repo type.
    - Apply the profile-aware `.gitignore` policy with `bootstrap_repo_templates.py --visibility <profile>`.
+   - Plan or apply the standard repo settings and label bundle with `configure_repo_governance.py`.
    - Keep placeholders clearly marked until project-specific commands are known.
 8. Commit and push initial setup if approved.
    - Keep initial commit scoped to repo initialization.
@@ -224,6 +225,18 @@ Set default branch after `dev` exists remotely:
 
 ```bash
 gh repo edit OWNER/REPO --default-branch dev
+```
+
+Plan the standard governance changes first:
+
+```bash
+python skills/ora-et-labora/scripts/configure_repo_governance.py --repo OWNER/REPO
+```
+
+Apply them explicitly after approval:
+
+```bash
+python skills/ora-et-labora/scripts/configure_repo_governance.py --repo OWNER/REPO --apply
 ```
 
 Do not claim branch protection or rulesets are configured unless the command/API call has actually succeeded.
@@ -294,6 +307,17 @@ If not configured:
 
 - record as pending
 - do not imply protection exists
+
+The current governance helper covers:
+
+- default branch
+- delete branch on merge
+- auto-merge enablement
+- update-branch allowance
+- merge/squash/rebase merge method toggles
+- a default issue label set including `bug`, `enhancement`, `chore`, `docs`, and `release`
+
+Branch protection and rulesets should still be reported as pending unless separately configured.
 
 ## Red Flags - Stop Before Creating
 
