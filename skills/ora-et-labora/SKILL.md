@@ -172,9 +172,17 @@ Preferred worktree folder names avoid slashes, such as `fix-123-login-race`, `ep
 Branch lanes:
 
 - Normal lane: `dev -> feat|fix|chore/<issue>-<slug> -> PR to dev -> grouped release PR to main`. Use this for ordinary features, fixes, refactors, docs, and chores.
-- Epic lane: `dev -> epic/<slug> -> child issue branches -> PRs to epic/<slug> -> draft epic PR becomes ready -> PR to dev`. Use this only when several child PRs must integrate together before the combined outcome is safe on `dev`. Open a draft PR from `epic/<slug>` to `dev` immediately after creating the epic branch unless the user explicitly says the epic is local or experimental. Each child PR must link its issue and the parent epic issue or tracking issue. The draft epic PR is the coordination surface for scope, child issues, checklist/status, CI, verification plan, and final readiness; mark it ready only after child work is merged, verified, and reconciled with latest `dev`.
+- Epic lane: `dev -> epic/<slug> -> child issue branches -> PRs to epic/<slug> -> draft epic PR becomes ready -> PR to dev`. Use this only when several child PRs must integrate together before the combined outcome is safe on `dev`. Open a draft PR from `epic/<slug>` to `dev` immediately after creating the epic branch unless the user explicitly says the epic is local or experimental. Each child PR must link its issue and the parent epic issue or tracking issue. Because GitHub closing keywords in child PRs targeting an epic branch may not close issues until the work reaches the default branch, the final epic PR into `dev` must include `Closes #...` references for all child issues, or the parent epic issue must explicitly track child closure. The draft epic PR is the coordination surface for scope, child issues, checklist/status, CI, verification plan, and final readiness; mark it ready only after child work is merged, verified, and reconciled with latest `dev`.
 - Hotfix lane: `main -> hotfix/<issue>-<slug> -> PR to main -> reconcile to dev`. Use this for production breakage, deployment-blocking regressions, security-sensitive fixes, data-loss risk, or other priority fixes that should not wait for the next `dev -> main` release. Keep the patch narrow, verify against the stable behavior, require explicit user approval before merging to `main`, and immediately backport, merge, or cherry-pick the fix into `dev`.
 - Release stabilization lane: `dev -> release PR to main`, with only release-blocking fixes admitted into the release path. Non-blocking new work continues targeting `dev` or an epic lane.
+
+Parallel epic discipline:
+
+- Multiple `epic/<slug>` branches may exist in parallel, but every active epic draft PR must stay visible and describe overlapping surfaces.
+- Each epic branch must rebase on `origin/dev` regularly and before its draft PR is marked ready.
+- After one epic merges into `dev`, all other active epic branches must rebase on updated `origin/dev` before merging more child PRs or marking the epic ready.
+- If an epic changes shared contracts, APIs, schemas, auth, routing, deployment config, or core UI conventions, affected parallel epics must rebase immediately and record the impact in their draft PRs or task state.
+- If two epics modify the same contract, surface the overlap in both draft PRs and decide merge order. If one epic depends on another, make the dependency explicit and keep the dependent epic blocked or stacked until the base epic lands.
 
 Merge and approval rules:
 
@@ -282,7 +290,7 @@ For any nontrivial task, completion requires:
 - work performed in the owning worktree
 - relevant verification completed
 - browser evidence preserved when frontend behavior changed
-- PR opened or updated against `dev`
+- PR opened or updated against the selected lane target (`dev`, `epic/<slug>`, or `main` for hotfixes)
 - PR body references and closes the originating issue
 - task state and log reflect the latest truth
 - merged local task state is retired and the worktree is cleaned up when the branch is complete
