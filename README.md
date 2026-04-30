@@ -29,7 +29,7 @@ The key split is intentional: task-local execution state under `.project/todo/` 
 
 Implementation then happens inside the worktree, with verification driven by the type of change. Frontend work is not "tested" in the abstract; it is verified in the browser, with Playwright evidence collected into a stable repo-local log path. Docker-backed projects are handled with explicit worktree rules so switching branches does not turn into port collisions and stale containers.
 
-The branch flow is lane-based and PR-first. Normal work targets `dev`; epic work uses `epic/<slug>` plus an early draft PR to `dev`; urgent hotfixes target `main` first and then reconcile back to `dev`. Implementation PRs may use agent auto-merge only after branch freshness, verification, CI/review, issue-closure, and state-logging gates are satisfied. Stable promotion happens through grouped `dev` to `main` release PRs, and release or hotfix PRs into `main` require explicit user approval before merge.
+The branch flow is lane-based and PR-first. Normal work targets `dev`; epic work uses `epic/<slug>` plus an early draft PR to `dev`; urgent hotfixes target `main` first and then reconcile back to `dev`. Parallel epics are allowed, but they must stay rebased on `origin/dev`, and affected epics must rebase immediately when another epic merges or changes shared contracts. Implementation PRs may use agent auto-merge only after branch freshness, verification, CI/review, issue-closure, and state-logging gates are satisfied. Stable promotion happens through grouped `dev` to `main` release PRs, and release or hotfix PRs into `main` require explicit user approval before merge.
 
 Repo creation and bootstrap are visibility-aware. Private and internal repos can version durable `.project/` surfaces such as `.project/blueprint/` and concise `.project/logs/`, while keeping local task workspaces under `.project/todo/` local-only. Public repos keep `.project/` local by default and publish only sanitized contributor-facing docs and GitHub templates.
 
@@ -46,7 +46,7 @@ Repo creation and bootstrap are visibility-aware. Private and internal repos can
    - do not assemble long GitHub bodies inline
 4. Initialize branch-local state.
    - normal lane: one issue, one branch, one worktree, one local `CURRENT.md`, one append-only task log
-   - epic lane: `epic/<slug>` branch plus early draft PR to `dev`, with child issue PRs targeting the epic branch
+   - epic lane: `epic/<slug>` branch plus early draft PR to `dev`, with child issue PRs targeting the epic branch and final epic PR tracking child issue closure
    - hotfix lane: `main`-based branch for urgent stable fixes, followed by mandatory reconcile to `dev`
 5. Implement.
    - work from the worktree
@@ -56,7 +56,7 @@ Repo creation and bootstrap are visibility-aware. Private and internal repos can
    - store browser evidence under `.project/logs/playwright/<task-id>/<run-id>/`
 7. Open or update the PR for the selected lane.
    - normal PRs target `dev`
-   - epic child PRs target `epic/<slug>` and link the parent epic issue
+   - epic child PRs target `epic/<slug>` and link the parent epic issue; final epic PRs to `dev` include closing keywords for all child issues or explicitly track closure through the parent epic issue
    - hotfix PRs target `main` and require explicit user approval
    - summarize implementation, verification, and blueprint impact
    - include `Closes #<issue>` for the originating issue

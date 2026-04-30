@@ -21,6 +21,6 @@ Scope: applies to `personal/ora-et-labora/**`.
 ## Branch Flow
 
 - Normal work goes `dev` -> `feat|fix|chore/<issue>-<slug>` -> PR to `dev`.
-- Epic work goes `dev` -> `epic/<slug>` with an early draft PR to `dev`; child issue PRs target the epic branch.
+- Epic work goes `dev` -> `epic/<slug>` with an early draft PR to `dev`; child issue PRs target the epic branch, and parallel epics must rebase on `origin/dev` after other epics merge or shared contracts change.
 - Hotfix work goes `main` -> `hotfix/<issue>-<slug>` -> PR to `main`, then must be reconciled back to `dev`.
 - Stable releases promote grouped `dev` work -> `main` through release PRs.

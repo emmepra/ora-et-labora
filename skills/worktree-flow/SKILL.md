@@ -88,9 +88,19 @@ Worktree folder names should avoid slashes:
 Select the lane before creating the branch or worktree. This section overrides older shorthand that every branch targets `dev`.
 
 - Normal lane: `dev -> feat|fix|chore/<issue>-<slug> -> PR to dev`. Use for independently deliverable issues.
-- Epic lane: `dev -> epic/<slug> -> child issue branches -> PRs to epic/<slug> -> draft epic PR to dev`. Use only when several child PRs must integrate together before the outcome is safe on `dev`. Open the draft epic PR to `dev` immediately after creating `epic/<slug>` unless the user explicitly says the epic is local or experimental.
+- Epic lane: `dev -> epic/<slug> -> child issue branches -> PRs to epic/<slug> -> draft epic PR to dev`. Use only when several child PRs must integrate together before the outcome is safe on `dev`. Open the draft epic PR to `dev` immediately after creating `epic/<slug>` unless the user explicitly says the epic is local or experimental. Because GitHub closing keywords in child PRs targeting an epic branch may not close issues until the work reaches the default branch, the final epic PR into `dev` must include `Closes #...` references for all child issues, or the parent epic issue must explicitly track child closure.
 - Hotfix lane: `main -> hotfix/<issue>-<slug> -> PR to main -> reconcile to dev`. Use for urgent production, security, data-loss, or deployment-blocking fixes. Hotfix PRs to `main` require explicit user approval before merge.
 - Release stabilization lane belongs to `release-train`, not normal implementation flow.
+
+## Parallel Epic Discipline
+
+Multiple `epic/<slug>` branches may exist in parallel, but they require explicit sync discipline.
+
+- Keep every active epic draft PR visible and use it to describe overlapping files, contracts, routes, schemas, APIs, auth, deployment config, or core UI surfaces.
+- Rebase each epic branch on `origin/dev` regularly and before marking the draft epic PR ready.
+- When one epic merges into `dev`, every other active epic must rebase on updated `origin/dev` before accepting more child PRs or marking ready.
+- When one epic changes a shared contract, all affected parallel epics must rebase immediately and record the impact in the draft PR or branch-local task state.
+- If two epics modify the same contract, decide and document merge order. If one epic depends on another, keep it blocked or explicitly stacked until the base epic lands.
 
 ## Worktree Procedure
 
@@ -123,7 +133,7 @@ Select the lane before creating the branch or worktree. This section overrides o
 7. Rebase on the selected upstream at required gates.
    - Normal branches rebase on `origin/dev`.
    - Epic child branches rebase on the remote epic branch.
-   - Epic parent branches rebase on `origin/dev` before marking the draft PR ready.
+   - Epic parent branches rebase on `origin/dev` regularly, after other epics merge, after shared-contract changes, and before marking the draft PR ready.
    - Hotfix branches rebase on `origin/main`.
    - Rebase at session start, after relevant upstream merges, before pushing, and before marking a PR ready.
 8. Before PR readiness, run the relevant verification.
@@ -144,7 +154,7 @@ Before marking a PR ready:
 - relevant local checks are current
 - browser evidence exists for frontend behavior changes
 - Docker/runtime state was rebuilt or restarted after sync when relevant
-- PR body contains a closing reference to the originating issue, such as `Closes #123`
+- PR body contains a closing reference to the originating issue, such as `Closes #123`; final epic PRs to `dev` include closing references for all child issues or explicitly track closure through the parent epic issue
 - PR body is rendered through the wrapper script or from a rendered body file
 - branch-local `.project` state points to the PR
 
@@ -166,7 +176,7 @@ Auto-merge gates for implementation PRs:
 - PR target is `dev` for normal work or the owning `epic/<slug>` for epic child work; it is not `main`.
 - PR is not a release PR, hotfix-to-stable PR, emergency production promotion, or epic parent draft PR being marked ready.
 - PR body includes a closing reference for the originating issue, such as `Closes #123`.
-- Branch is rebased on the current selected upstream base.
+- Branch is rebased on the current selected upstream base; active epic branches are also rebased after other epics merge or shared contracts change.
 - Local verification is recorded in `CURRENT.md`, the task log, and the PR body.
 - Browser evidence exists when frontend-visible behavior changed, or the PR body explains why browser verification is not applicable.
 - Required CI is passing, or GitHub auto-merge is enabled while required CI is pending.
@@ -238,7 +248,7 @@ When two active worktrees overlap:
 - prefer merging the branch with fewer dependencies first
 - rebase the other branch on `origin/dev` immediately after the first merge
 - resolve conflicts in the dependent branch
-- use epic branches for deliberate multi-issue integration; use stacked PRs only temporarily when one branch depends on another unmerged branch
+- use epic branches for deliberate multi-issue integration; keep parallel epics rebased on `origin/dev`; use stacked PRs only temporarily when one branch depends on another unmerged branch
 - retarget stacked PRs to the selected lane target after the base PR merges
 
 Do not let two worktrees silently modify the same contract without surfacing overlap in PRs or task logs.
@@ -248,6 +258,8 @@ Do not let two worktrees silently modify the same contract without surfacing ove
 - "I created a worktree but kept editing the main checkout."
 - "The PR targets `main` for normal implementation work."
 - "The child PR targets `dev` even though it belongs to an active epic branch."
+- "Another epic merged to `dev`, but this epic kept accepting child PRs without rebasing."
+- "The final epic PR relies on child PR closing keywords that may not close issues from a non-default epic branch."
 - "I created `module/<slug>` instead of the current `epic/<slug>` lane."
 - "The PR references the issue in prose but does not use a closing keyword."
 - "I pushed before rebasing on `origin/dev`."
