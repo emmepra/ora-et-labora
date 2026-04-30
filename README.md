@@ -8,13 +8,13 @@ The suite is built around a simple idea:
 
 - shape the work before coding
 - check the work against the project blueprint
-- keep one issue, one branch, one worktree, and one resumable state surface
+- choose the right branch lane before work starts
 - verify using the right modality for the change
 - make implementation PRs close their originating issues on merge
 - allow implementation PR auto-merge only after explicit safety gates
 - treat browser evidence and Docker runtime behavior as first-class operational concerns
 - choose a public/private/internal artifact policy before publishing workflow state
-- integrate into `dev`
+- integrate normal work and completed epics into `dev`
 - release from `dev` to `main`
 
 ## How It Works
@@ -29,7 +29,7 @@ The key split is intentional: task-local execution state under `.project/todo/` 
 
 Implementation then happens inside the worktree, with verification driven by the type of change. Frontend work is not "tested" in the abstract; it is verified in the browser, with Playwright evidence collected into a stable repo-local log path. Docker-backed projects are handled with explicit worktree rules so switching branches does not turn into port collisions and stale containers.
 
-The branch flow is PR-first into `dev`. Implementation PRs may use agent auto-merge only after branch freshness, verification, CI/review, issue-closure, and state-logging gates are satisfied. Stable promotion happens through grouped `dev` to `main` release PRs, and those release PRs require explicit user approval before merge.
+The branch flow is lane-based and PR-first. Normal work targets `dev`; epic work uses `epic/<slug>` plus an early draft PR to `dev`; urgent hotfixes target `main` first and then reconcile back to `dev`. Implementation PRs may use agent auto-merge only after branch freshness, verification, CI/review, issue-closure, and state-logging gates are satisfied. Stable promotion happens through grouped `dev` to `main` release PRs, and release or hotfix PRs into `main` require explicit user approval before merge.
 
 Repo creation and bootstrap are visibility-aware. Private and internal repos can version durable `.project/` surfaces such as `.project/blueprint/` and concise `.project/logs/`, while keeping local task workspaces under `.project/todo/` local-only. Public repos keep `.project/` local by default and publish only sanitized contributor-facing docs and GitHub templates.
 
@@ -45,24 +45,25 @@ Repo creation and bootstrap are visibility-aware. Private and internal repos can
    - use rendered markdown templates
    - do not assemble long GitHub bodies inline
 4. Initialize branch-local state.
-   - one issue
-   - one branch
-   - one worktree
-   - one local `CURRENT.md`
-   - one append-only versioned task log
+   - normal lane: one issue, one branch, one worktree, one local `CURRENT.md`, one append-only task log
+   - epic lane: `epic/<slug>` branch plus early draft PR to `dev`, with child issue PRs targeting the epic branch
+   - hotfix lane: `main`-based branch for urgent stable fixes, followed by mandatory reconcile to `dev`
 5. Implement.
    - work from the worktree
    - keep state resumable after context compaction
 6. Verify.
    - select checks by change type
-   - store browser evidence under `.project/logs/playwright/<module-id>/<run-id>/`
-7. Open or update the PR to `dev`.
+   - store browser evidence under `.project/logs/playwright/<task-id>/<run-id>/`
+7. Open or update the PR for the selected lane.
+   - normal PRs target `dev`
+   - epic child PRs target `epic/<slug>` and link the parent epic issue
+   - hotfix PRs target `main` and require explicit user approval
    - summarize implementation, verification, and blueprint impact
    - include `Closes #<issue>` for the originating issue
 8. Clean up after merge.
-   - remove the merged local task workspace under `.project/todo/<module-id>/`
+   - remove the merged local task workspace under `.project/todo/<task-id>/`
    - remove the owning worktree and local branch when safe
-   - use `python scripts/close_task_workspace.py --repo-root . --module-id <module-id>` and add `--apply` only after checking the plan
+   - use `python scripts/close_task_workspace.py --repo-root . --module-id <task-id>` and add `--apply` only after checking the plan
 9. Release `dev` to `main` when requested.
    - grouped release PRs, not one stable merge per implementation PR
 
@@ -75,9 +76,9 @@ Repo creation and bootstrap are visibility-aware. Private and internal repos can
 - Verification is modality-specific.
 - Browser verification requires evidence, not just a claim.
 - Implementation PRs must reference and close their originating issues.
-- Implementation PR auto-merge is allowed only for eligible `dev` PRs.
+- Implementation PR auto-merge is allowed only for eligible normal PRs to `dev` and eligible epic child PRs to an epic branch.
 - Merged task work should be retired deliberately, without creating extra versioned cleanup churn.
-- Release PRs into `main` require explicit approval before merge.
+- Release and hotfix PRs into `main` require explicit approval before merge.
 - Docker behavior across worktrees must be explicit.
 - Public repos keep agent-private state local unless explicitly sanitized.
 - `dev` is the integration branch.
@@ -90,7 +91,7 @@ skills/ora-et-labora/       shared principles, suite map, shared resources
 skills/issue-shaping/       challenge record and issue drafting
 skills/blueprint-guard/     blueprint fit check and durable blueprint updates
 skills/state-logging/       CURRENT.md and delta-only task log discipline
-skills/worktree-flow/       branch naming, worktrees, PR-to-dev, Docker rules
+skills/worktree-flow/       branch lanes, worktrees, PR targets, Docker rules
 skills/verify-and-evidence/ modality-based verification and Playwright evidence
 skills/release-train/       grouped dev-to-main release flow
 skills/repo-init/           new repo creation, owner/org, visibility, repo type
@@ -127,7 +128,7 @@ The operating procedure is intentionally inline in the skill files. Extra files 
 - `state-logging`
   - keeps resumable state minimal and durable after context compaction
 - `worktree-flow`
-  - owns branch naming, worktree lifecycle, Docker coexistence, and PRs into `dev`
+  - owns branch lanes, worktree lifecycle, Docker coexistence, and PR targets
 - `verify-and-evidence`
   - chooses verification modalities and stores browser evidence correctly
 - `release-train`

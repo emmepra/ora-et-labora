@@ -20,5 +20,7 @@ Scope: applies to `personal/ora-et-labora/**`.
 
 ## Branch Flow
 
-- Implementation work goes branch -> PR -> `dev`.
-- Stable releases promote `dev` -> `main`.
+- Normal work goes `dev` -> `feat|fix|chore/<issue>-<slug>` -> PR to `dev`.
+- Epic work goes `dev` -> `epic/<slug>` with an early draft PR to `dev`; child issue PRs target the epic branch.
+- Hotfix work goes `main` -> `hotfix/<issue>-<slug>` -> PR to `main`, then must be reconciled back to `dev`.
+- Stable releases promote grouped `dev` work -> `main` through release PRs.
