@@ -107,11 +107,12 @@ If the same paragraph appears in all artifacts, the workflow is becoming redunda
    - List browser checks if UI behavior is touched.
    - List CI expectations if the work will enter PR flow.
 7. Create or update `00_brainstorm.md`.
-   - Use the brainstorm template when starting a new module.
+   - Use the brainstorm template when starting a new task or epic.
    - Keep it focused on challenge and feasibility, not implementation progress.
 8. Draft or refine the GitHub issue body.
    - Use `issue-bug.md` for bugs.
    - Use `issue-feature.md` for features.
+   - Use `issue-epic.md` for multi-issue outcomes that need an epic lane.
    - Standard path: use `../ora-et-labora/scripts/create_issue_from_template.py`.
    - Minimum fallback: render a body file first, then use `gh issue create --body-file <file>`.
    - Do not hand-write multi-section issue markdown directly into `gh issue create`.
@@ -209,6 +210,7 @@ Verification plan:
 - `../ora-et-labora/assets/templates/brainstorm.md`
 - `../ora-et-labora/assets/templates/issue-bug.md`
 - `../ora-et-labora/assets/templates/issue-feature.md`
+- `../ora-et-labora/assets/templates/issue-epic.md`
 - `../ora-et-labora/scripts/render_template.py`
 - `../ora-et-labora/scripts/create_issue_from_template.py`
 

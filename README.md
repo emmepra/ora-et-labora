@@ -46,7 +46,7 @@ Repo creation and bootstrap are visibility-aware. Private and internal repos can
    - do not assemble long GitHub bodies inline
 4. Initialize branch-local state.
    - normal lane: one issue, one branch, one worktree, one local `CURRENT.md`, one append-only task log
-   - epic lane: `epic/<slug>` branch plus early draft PR to `dev`, with child issue PRs targeting the epic branch and final epic PR tracking child issue closure
+   - epic lane: `epic/<slug>` branch plus early draft PR to `dev` rendered from the epic PR template, with child issue PRs targeting the epic branch and final epic PR tracking child issue closure
    - hotfix lane: `main`-based branch for urgent stable fixes, followed by mandatory reconcile to `dev`
 5. Implement.
    - work from the worktree
@@ -107,7 +107,7 @@ The suite includes:
 - a shared workflow overview under `skills/ora-et-labora`
 - focused trigger skills for each major workflow phase
 - detailed self-contained `SKILL.md` bodies with procedure, red flags, rationalization counters, and completion checklists
-- issue, PR, release, brainstorm, current-state, and log templates
+- issue, epic issue, PR, epic draft PR, release, brainstorm, current-state, and log templates
 - bootstrap assets for `.github/` and `.project/blueprint/`
 - helper scripts for template rendering, issue/PR creation, issue workspace initialization, visibility-aware bootstrap, and Playwright artifact collection
 - a governance helper that can plan or apply default repo settings and a standard issue label set
