@@ -88,7 +88,7 @@ Worktree folder names should avoid slashes:
 Select the lane before creating the branch or worktree. This section overrides older shorthand that every branch targets `dev`.
 
 - Normal lane: `dev -> feat|fix|chore/<issue>-<slug> -> PR to dev`. Use for independently deliverable issues.
-- Epic lane: `dev -> epic/<slug> -> child issue branches -> PRs to epic/<slug> -> draft epic PR to dev`. Use only when several child PRs must integrate together before the outcome is safe on `dev`. Open the draft epic PR to `dev` immediately after creating `epic/<slug>` unless the user explicitly says the epic is local or experimental. Because GitHub closing keywords in child PRs targeting an epic branch may not close issues until the work reaches the default branch, the final epic PR into `dev` must include `Closes #...` references for all child issues, or the parent epic issue must explicitly track child closure.
+- Epic lane: `dev -> epic/<slug> -> child issue branches -> PRs to epic/<slug> -> draft epic PR to dev`. Use only when several child PRs must integrate together before the outcome is safe on `dev`. Open the draft epic PR to `dev` immediately after creating `epic/<slug>` unless the user explicitly says the epic is local or experimental. Render the draft epic PR from `epic-pr.md`. Because GitHub closing keywords in child PRs targeting an epic branch may not close issues until the work reaches the default branch, the final epic PR into `dev` must include `Closes #...` references for all child issues, or the parent epic issue must explicitly track child closure.
 - Hotfix lane: `main -> hotfix/<issue>-<slug> -> PR to main -> reconcile to dev`. Use for urgent production, security, data-loss, or deployment-blocking fixes. Hotfix PRs to `main` require explicit user approval before merge.
 - Release stabilization lane belongs to `release-train`, not normal implementation flow.
 
@@ -123,7 +123,7 @@ Multiple `epic/<slug>` branches may exist in parallel, but they require explicit
    - Treat `.project/todo` as local task workspace state, not published repo history.
 6. Open or update the lane PR.
    - Normal branch base: `dev`.
-   - Epic parent branch: open a draft PR from `epic/<slug>` to `dev` immediately as the coordination surface. Include scope, child issues, checklist/status, CI, verification plan, and final readiness criteria.
+   - Epic parent branch: open a draft PR from `epic/<slug>` to `dev` immediately as the coordination surface. Render it from `../ora-et-labora/assets/templates/epic-pr.md`. Include scope, child issues, checklist/status, overlapping surfaces, rebase status, CI, verification plan, child issue closure plan, and final readiness criteria.
    - Epic child branch base: the owning `epic/<slug>`. Link the child issue and parent epic issue or tracking issue.
    - Hotfix branch base: `main`; require explicit user approval before merge and record the plan to reconcile back to `dev`.
    - Standard path: use `../ora-et-labora/scripts/create_pr_from_template.py`.

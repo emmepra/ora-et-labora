@@ -172,7 +172,7 @@ Preferred worktree folder names avoid slashes, such as `fix-123-login-race`, `ep
 Branch lanes:
 
 - Normal lane: `dev -> feat|fix|chore/<issue>-<slug> -> PR to dev -> grouped release PR to main`. Use this for ordinary features, fixes, refactors, docs, and chores.
-- Epic lane: `dev -> epic/<slug> -> child issue branches -> PRs to epic/<slug> -> draft epic PR becomes ready -> PR to dev`. Use this only when several child PRs must integrate together before the combined outcome is safe on `dev`. Open a draft PR from `epic/<slug>` to `dev` immediately after creating the epic branch unless the user explicitly says the epic is local or experimental. Each child PR must link its issue and the parent epic issue or tracking issue. Because GitHub closing keywords in child PRs targeting an epic branch may not close issues until the work reaches the default branch, the final epic PR into `dev` must include `Closes #...` references for all child issues, or the parent epic issue must explicitly track child closure. The draft epic PR is the coordination surface for scope, child issues, checklist/status, CI, verification plan, and final readiness; mark it ready only after child work is merged, verified, and reconciled with latest `dev`.
+- Epic lane: `dev -> epic/<slug> -> child issue branches -> PRs to epic/<slug> -> draft epic PR becomes ready -> PR to dev`. Use this only when several child PRs must integrate together before the combined outcome is safe on `dev`. Open a draft PR from `epic/<slug>` to `dev` immediately after creating the epic branch unless the user explicitly says the epic is local or experimental. Render the draft epic PR from `epic-pr.md`. Each child PR must link its issue and the parent epic issue or tracking issue. Because GitHub closing keywords in child PRs targeting an epic branch may not close issues until the work reaches the default branch, the final epic PR into `dev` must include `Closes #...` references for all child issues, or the parent epic issue must explicitly track child closure. The draft epic PR is the coordination surface for scope, child issues, checklist/status, overlapping surfaces, rebase status, CI, verification plan, child issue closure plan, and final readiness; mark it ready only after child work is merged, verified, and reconciled with latest `dev`.
 - Hotfix lane: `main -> hotfix/<issue>-<slug> -> PR to main -> reconcile to dev`. Use this for production breakage, deployment-blocking regressions, security-sensitive fixes, data-loss risk, or other priority fixes that should not wait for the next `dev -> main` release. Keep the patch narrow, verify against the stable behavior, require explicit user approval before merging to `main`, and immediately backport, merge, or cherry-pick the fix into `dev`.
 - Release stabilization lane: `dev -> release PR to main`, with only release-blocking fixes admitted into the release path. Non-blocking new work continues targeting `dev` or an epic lane.
 
@@ -233,7 +233,9 @@ Template assets live under `assets/templates/`:
 
 - `issue-bug.md`
 - `issue-feature.md`
+- `issue-epic.md`
 - `pr.md`
+- `epic-pr.md`
 - `release-pr.md`
 - `brainstorm.md`
 - `current.md`
