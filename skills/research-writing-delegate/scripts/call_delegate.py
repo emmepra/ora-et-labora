@@ -20,6 +20,7 @@ DEFAULT_PROVIDER = "openrouter"
 DEFAULT_OPENROUTER_MODEL = "openai/gpt-5.2"
 DEFAULT_OPENAI_MODEL = "gpt-5.5"
 SKILL_DIR = Path(__file__).resolve().parents[1]
+DEFAULT_ENV_FILE_PATH = SKILL_DIR / ".env"
 DEFAULT_SYSTEM_PROMPT_PATH = SKILL_DIR / "prompts" / "delegate_system.md"
 ALLOWED_TASK_TYPES = {
     "draft_paragraph",
@@ -63,18 +64,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--provider",
         choices=["openrouter", "openai"],
-        default=os.environ.get("RESEARCH_WRITING_DELEGATE_PROVIDER", DEFAULT_PROVIDER),
     )
     parser.add_argument("--brief-kind", choices=["initial", "revision"], default="initial")
     parser.add_argument("--brief", required=True, help="Path to brief JSON, or '-' for stdin.")
     parser.add_argument("--out", type=Path, help="Write artifact JSON to this path.")
-    parser.add_argument("--model", default=os.environ.get("RESEARCH_WRITING_DELEGATE_MODEL"))
+    parser.add_argument("--model")
     parser.add_argument("--system-prompt", type=Path, default=DEFAULT_SYSTEM_PROMPT_PATH)
-    parser.add_argument("--env-file", type=Path, help="Optional local untracked .env file.")
+    parser.add_argument(
+        "--env-file",
+        type=Path,
+        help="Optional local untracked .env file. Defaults to skill-local .env when present.",
+    )
     parser.add_argument("--max-output-tokens", type=int, default=1800)
     parser.add_argument("--temperature", type=float, default=0.4)
-    parser.add_argument("--openrouter-site-url", default=os.environ.get("OPENROUTER_SITE_URL"))
-    parser.add_argument("--openrouter-app-name", default=os.environ.get("OPENROUTER_APP_NAME"))
+    parser.add_argument("--openrouter-site-url")
+    parser.add_argument("--openrouter-app-name")
     parser.add_argument("--dry-run", action="store_true", help="Print sanitized request payload without calling the API.")
     return parser.parse_args()
 
@@ -92,6 +96,14 @@ def load_env_file(path: Path, environ: dict[str, str] | None = None) -> None:
         value = value.strip().strip('"').strip("'")
         if key and key not in target:
             target[key] = value
+
+
+def resolve_env_file(explicit_env_file: Path | None) -> Path | None:
+    if explicit_env_file is not None:
+        return explicit_env_file
+    if DEFAULT_ENV_FILE_PATH.exists():
+        return DEFAULT_ENV_FILE_PATH
+    return None
 
 
 def load_brief(path_value: str) -> dict[str, Any]:
@@ -225,12 +237,26 @@ def validate_brief(brief: dict[str, Any], brief_kind: str) -> None:
         raise SystemExit("Brief validation failed:\n- " + "\n- ".join(errors))
 
 
+def resolve_provider(provider: str | None) -> str:
+    return (provider or os.environ.get("RESEARCH_WRITING_DELEGATE_PROVIDER", DEFAULT_PROVIDER)).lower()
+
+
 def resolve_model(provider: str, model: str | None) -> str:
+    if model is None:
+        model = os.environ.get("RESEARCH_WRITING_DELEGATE_MODEL")
     if model:
         return model
     if provider == "openrouter":
         return DEFAULT_OPENROUTER_MODEL
     return DEFAULT_OPENAI_MODEL
+
+
+def resolve_openrouter_site_url(value: str | None) -> str | None:
+    return value or os.environ.get("OPENROUTER_SITE_URL")
+
+
+def resolve_openrouter_app_name(value: str | None) -> str | None:
+    return value or os.environ.get("OPENROUTER_APP_NAME")
 
 
 def build_request(
@@ -406,10 +432,11 @@ def build_artifact(
 
 def main() -> int:
     args = parse_args()
-    if args.env_file:
-        load_env_file(args.env_file)
+    env_file = resolve_env_file(args.env_file)
+    if env_file is not None:
+        load_env_file(env_file)
 
-    provider = args.provider.lower()
+    provider = resolve_provider(args.provider)
     brief = load_brief(args.brief)
     validate_brief(brief, args.brief_kind)
     model = resolve_model(provider, args.model)
@@ -433,8 +460,8 @@ def main() -> int:
         provider,
         endpoint,
         api_key,
-        args.openrouter_site_url,
-        args.openrouter_app_name,
+        resolve_openrouter_site_url(args.openrouter_site_url),
+        resolve_openrouter_app_name(args.openrouter_app_name),
     )
     artifact = build_artifact(brief, request_payload, api_response, provider, endpoint)
     if args.out:

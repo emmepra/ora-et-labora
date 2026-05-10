@@ -30,7 +30,7 @@ Copy `.env.example` to a local untracked `.env` if needed:
 cp skills/research-writing-delegate/.env.example .env
 ```
 
-Keep `.env` local-only. The committed file is only a template. Optional OpenRouter request metadata can be set with `OPENROUTER_SITE_URL` and `OPENROUTER_APP_NAME`.
+Keep `.env` local-only. The committed file is only a template. The helper automatically loads `skills/research-writing-delegate/.env` when present; pass `--env-file <path>` to use a different local file. Optional OpenRouter request metadata can be set with `OPENROUTER_SITE_URL` and `OPENROUTER_APP_NAME`.
 
 ## Prompt And Template Assets
 
@@ -161,7 +161,7 @@ python skills/research-writing-delegate/scripts/call_delegate.py \
   --out .project/todo/<task-id>/delegate-output.json
 ```
 
-Use `--env-file .env` only with an untracked local file.
+Use `--env-file <path>` only with an untracked local file. CLI flags such as `--model` override `.env` values.
 
 ## Common Mistakes
 
