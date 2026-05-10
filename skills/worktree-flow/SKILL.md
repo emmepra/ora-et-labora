@@ -187,7 +187,7 @@ Use `gh pr merge --auto --merge` when required checks are still pending and GitH
 
 If GitHub auto-merge is unavailable, blocked by settings, or rejected by branch protection, do not force the merge. Record the blocker and leave the PR open.
 
-Release PRs and hotfix PRs into `main` require explicit user approval before merge, even when checks are green. Do not enable auto-merge for release or hotfix PRs unless the user explicitly says to enable auto-merge for that specific PR. After a hotfix merges to `main`, reconciling the fix into `dev` is mandatory.
+For release PRs into `main` and hotfix PRs into `main`, explicit user approval is required before merge, even when checks are green. Do not enable auto-merge for release or hotfix PRs unless the user explicitly says to enable auto-merge for that specific PR. After a hotfix merges to `main`, reconciling the fix into `dev` is mandatory.
 
 ## Docker Runtime Model
 

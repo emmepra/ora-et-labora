@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Research Writing Delegate Brief",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["task"],
+  "not": {
+    "required": ["feedback"]
+  },
+  "properties": {
+    "task": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type", "target", "goal"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "draft_paragraph",
+            "rewrite",
+            "tighten",
+            "bridge",
+            "abstract",
+            "critique",
+            "related_work",
+            "theory",
+            "literature_review",
+            "limits"
+          ]
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "goal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "length": {
+          "type": "string"
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "before": {
+          "type": "string"
+        },
+        "current": {
+          "type": "string"
+        },
+        "after": {
+          "type": "string"
+        },
+        "outline": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "may_make": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "must_not_make": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["citation_key", "excerpt", "usable_for"],
+        "properties": {
+          "citation_key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "excerpt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "usable_for": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "style": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

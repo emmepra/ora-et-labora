@@ -1,0 +1,23 @@
+{
+  "task": {
+    "type": "rewrite",
+    "target": "paragraph",
+    "goal": "Tighten the argument while preserving the current claim boundary.",
+    "length": "120-180 words"
+  },
+  "context": {
+    "before": "",
+    "current": "",
+    "after": "",
+    "outline": []
+  },
+  "claims": {
+    "may_make": [],
+    "must_not_make": []
+  },
+  "sources": [],
+  "style": {
+    "sample": "",
+    "constraints": []
+  }
+}
