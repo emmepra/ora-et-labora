@@ -103,6 +103,78 @@ class ResearchWritingDelegateTests(unittest.TestCase):
         self.assertEqual(environ["OPENROUTER_API_KEY"], "already-set")
         self.assertEqual(environ["RESEARCH_WRITING_DELEGATE_MODEL"], "writer-model")
 
+    def test_env_file_model_is_loaded_before_dry_run_payload(self) -> None:
+        brief = {"task": {"type": "rewrite", "target": "paragraph", "goal": "tighten"}}
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            brief_path = tmp_path / "brief.json"
+            env_path = tmp_path / ".env"
+            brief_path.write_text(json.dumps(brief), encoding="utf-8")
+            env_path.write_text(
+                "RESEARCH_WRITING_DELEGATE_MODEL=moonshotai/kimi-k2.6\n",
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    "--env-file",
+                    str(env_path),
+                    "--brief",
+                    str(brief_path),
+                    "--dry-run",
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+                env={},
+            )
+
+        self.assertEqual(json.loads(result.stdout)["model"], "moonshotai/kimi-k2.6")
+
+    def test_cli_model_overrides_env_file_model(self) -> None:
+        brief = {"task": {"type": "rewrite", "target": "paragraph", "goal": "tighten"}}
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            brief_path = tmp_path / "brief.json"
+            env_path = tmp_path / ".env"
+            brief_path.write_text(json.dumps(brief), encoding="utf-8")
+            env_path.write_text(
+                "RESEARCH_WRITING_DELEGATE_MODEL=moonshotai/kimi-k2.6\n",
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    "--env-file",
+                    str(env_path),
+                    "--brief",
+                    str(brief_path),
+                    "--model",
+                    "openai/gpt-test",
+                    "--dry-run",
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+                env={},
+            )
+
+        self.assertEqual(json.loads(result.stdout)["model"], "openai/gpt-test")
+
+    def test_skill_local_env_file_is_auto_discovered(self) -> None:
+        module = load_module()
+        with tempfile.TemporaryDirectory() as tmp:
+            env_path = Path(tmp) / ".env"
+            env_path.write_text("RESEARCH_WRITING_DELEGATE_MODEL=moonshotai/kimi-k2.6\n", encoding="utf-8")
+            original = module.DEFAULT_ENV_FILE_PATH
+            try:
+                module.DEFAULT_ENV_FILE_PATH = env_path
+                self.assertEqual(module.resolve_env_file(None), env_path)
+            finally:
+                module.DEFAULT_ENV_FILE_PATH = original
+
     def test_invalid_brief_fails_before_dry_run(self) -> None:
         brief = {"task": {"type": "rewrite", "target": "paragraph"}}
         with tempfile.TemporaryDirectory() as tmp:
