@@ -2,6 +2,12 @@ __pycache__/
 *.pyc
 .DS_Store
 .venv/
+.env
+.env.*
+!.env.example
+skills/*/.env
+skills/*/.env.*
+!skills/*/.env.example
 .project/todo/
 .project/logs/archive/
 .project/worktrees/

@@ -1,8 +1,8 @@
 # Ora et Labora
 
-Ora et Labora is a repo-first workflow suite for coding agents.
+Ora et Labora is a repo-first workflow suite for coding and research agents.
 
-It is not a bag of prompts. It is a working method for taking nontrivial software changes from rough idea to stable release without relying on agent memory or ad hoc habits.
+It is not a bag of prompts. It is a working method for taking nontrivial software and research work from rough idea to stable release, durable artifact, or verified manuscript state without relying on agent memory or ad hoc habits.
 
 The suite is built around a simple idea:
 
@@ -14,6 +14,7 @@ The suite is built around a simple idea:
 - allow implementation PR auto-merge only after explicit safety gates
 - treat browser evidence and Docker runtime behavior as first-class operational concerns
 - choose a public/private/internal artifact policy before publishing workflow state
+- route research projects through exploratory notebooks, reusable analysis code, paper artifacts, and manuscript operations without bypassing repo discipline
 - integrate normal work and completed epics into `dev`
 - release from `dev` to `main`
 
@@ -32,6 +33,20 @@ Implementation then happens inside the worktree, with verification driven by the
 The branch flow is lane-based and PR-first. Normal work targets `dev`; epic work uses `epic/<slug>` plus an early draft PR to `dev`; urgent hotfixes target `main` first and then reconcile back to `dev`. Parallel epics are allowed, but they must stay rebased on `origin/dev`, and affected epics must rebase immediately when another epic merges or changes shared contracts. Implementation PRs may use agent auto-merge only after branch freshness, verification, CI/review, issue-closure, and state-logging gates are satisfied. Stable promotion happens through grouped `dev` to `main` release PRs, and release or hotfix PRs into `main` require explicit user approval before merge.
 
 Repo creation and bootstrap are visibility-aware. Private and internal repos can version durable `.project/` surfaces such as `.project/blueprint/` and concise `.project/logs/`, while keeping local task workspaces under `.project/todo/` local-only. Public repos keep `.project/` local by default and publish only sanitized contributor-facing docs and GitHub templates.
+
+## Research Profile
+
+Research projects use the same artifact model, but their default surfaces are different. Codex should expect `.project/blueprint/` for research frame, scope, claims, assumptions, and durable decisions; `references/` for external/source material; `papers/` for manuscript sources and nearby compiled outputs; `notebooks/` for exploratory marimo artifacts; and `src/`, `scripts/`, `tests/`, or `data/` when analysis infrastructure becomes reusable.
+
+The research workflow has three lanes:
+
+- exploration: use `marimo-pair` for live human-researcher interaction, diagnostics, exploratory analysis, visualization, and figure prototyping
+- implementation: promote reusable analysis or paper-supporting code into the normal Ora et Labora issue, blueprint, worktree, verification, and PR flow
+- manuscript: use LaTeX/paper skills for manuscript creation, Overleaf sync, PDF checks, citations, `.bbl`, arXiv outputs, and bounded prose-generation workflows
+
+Paper-facing work can route to `latex-document` for LaTeX manuscript setup and local render checks, `overleaf` for Overleaf operations, and `research-writing-delegate` for external-model prose drafting with Codex review and explicit user approval before regeneration or integration.
+
+The profile is intentionally lightweight: it teaches routing and defaults without making every research task run every skill.
 
 ## The Basic Workflow
 
@@ -96,6 +111,7 @@ skills/verify-and-evidence/ modality-based verification and Playwright evidence
 skills/release-train/       grouped dev-to-main release flow
 skills/repo-init/           new repo creation, owner/org, visibility, repo type
 skills/repo-bootstrap/      existing repo templates and workflow bootstrap
+skills/research-writing-delegate/ bounded external-model prose drafting for papers
 scripts/                    install, sync, and validation helpers
 examples/                   concrete end-to-end workflow examples
 .github/workflows/          repo-level validation workflow
@@ -112,6 +128,7 @@ The suite includes:
 - helper scripts for template rendering, issue/PR creation, issue workspace initialization, visibility-aware bootstrap, and Playwright artifact collection
 - a governance helper that can plan or apply default repo settings and a standard issue label set
 - a cleanup helper that removes merged local task state and retires the owning worktree/local branch through a dry-run-first flow
+- a research-writing delegate helper that calls OpenRouter by default, with an OpenAI Responses API fallback, using versioned prompts, validated compact briefs, review artifacts, and structured output schemas
 - a CI gate that rejects malformed implementation or release PR bodies that do not satisfy the suite contract
 
 The operating procedure is intentionally inline in the skill files. Extra files are reserved for templates, scripts, bootstrap assets, tests, and examples.
@@ -137,6 +154,8 @@ The operating procedure is intentionally inline in the skill files. Extra files 
   - creates new local/GitHub repos with the right owner, visibility, repo type, branch model, and initial workflow setup
 - `repo-bootstrap`
   - applies workflow templates and conventions to existing repositories
+- `research-writing-delegate`
+  - delegates bounded academic prose drafts to an external model while preserving Codex review, user approval, and source discipline
 
 ## Install
 
@@ -154,7 +173,8 @@ python ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github
   skills/verify-and-evidence \
   skills/release-train \
   skills/repo-init \
-  skills/repo-bootstrap
+  skills/repo-bootstrap \
+  skills/research-writing-delegate
 ```
 
 Restart Codex after installation so the skill is discovered.

@@ -1,0 +1,36 @@
+{
+  "task": {
+    "type": "rewrite",
+    "target": "paragraph",
+    "goal": "Revise the previous draft according to the approved feedback.",
+    "length": "120-180 words"
+  },
+  "context": {
+    "before": "",
+    "current": "",
+    "after": "",
+    "outline": []
+  },
+  "claims": {
+    "may_make": [],
+    "must_not_make": []
+  },
+  "sources": [],
+  "style": {
+    "sample": "",
+    "constraints": []
+  },
+  "feedback": {
+    "previous_draft": "Previous delegate draft goes here.",
+    "codex_review": {
+      "recommendation": "regenerate",
+      "claim_fit": [],
+      "citation_risk": [],
+      "style_fit": []
+    },
+    "requested_changes": [
+      "Apply only the user-approved changes captured from Codex review."
+    ],
+    "user_approved": true
+  }
+}
