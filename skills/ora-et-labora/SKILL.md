@@ -11,7 +11,7 @@ This is not the main execution skill for most tasks. The focused peer skills own
 
 ## Overview
 
-Ora et Labora is a repo-first workflow for agentic software development. It turns rough work into durable issues, checks feasibility against the project blueprint, executes in a branch worktree, verifies with the right modality, routes PRs through the correct branch lane, and promotes grouped releases from `dev` to `main`.
+Ora et Labora is a repo-first workflow for agentic software and research work. It turns rough work into durable issues, checks feasibility against the project blueprint, executes in a branch worktree when implementation is needed, verifies with the right modality, routes PRs through the correct branch lane, and promotes grouped releases from `dev` to `main`.
 
 Core principle: durable workflow truth must live in the repo, while branch-local task workspace state may stay local to the developer machine.
 
@@ -25,6 +25,7 @@ Use this umbrella skill when:
 - a request could match multiple Ora et Labora skills
 - the agent needs the suite map
 - the agent needs the artifact ownership model
+- the agent needs project-profile routing for software or research work
 - the agent needs to locate templates or helper scripts
 - the task spans issue shaping, worktree flow, verification, and release
 
@@ -42,6 +43,53 @@ Do not use this skill as a substitute for the detailed phase skills. If the task
 | `release-train` | promoting grouped work from `dev` to `main`, release PRs, release checks, and rollback notes |
 | `repo-init` | creating a new local or GitHub repo, choosing owner/org, visibility, repo type, source mode, and initial branch model |
 | `repo-bootstrap` | applying Ora et Labora templates, `.project/blueprint/`, CI/release placeholders, and conventions to an existing repo |
+
+## Project Profiles
+
+Project profiles change default repository structure and likely skill routing. They do not replace the core artifact model, branch lanes, verification rules, or completion standard when the task is nontrivial.
+
+| Profile | Use for | Default expectations |
+| --- | --- | --- |
+| `software` | apps, services, libraries, tools, and infrastructure | use the normal issue, blueprint, worktree, verification, PR, and release lifecycle |
+| `research` | academic or research repos with papers, sources, analysis, notebooks, and manuscript workflows | combine exploratory notebooks, reusable code, source material, and paper artifacts under the same repo-first discipline |
+
+### Research Profile
+
+When a repo is a research project, Codex should expect these surfaces unless a closer `AGENTS.md` or blueprint says otherwise:
+
+- `.project/blueprint/` stores the research frame, scope, claims, assumptions, workflow invariants, and durable decisions.
+- `.project/logs/` stores concise milestones, verification outcomes, and meaningful paper or analysis deltas.
+- `references/` stores external/source material when needed.
+- `papers/` stores authored manuscript sources and compiled outputs that belong beside the source.
+- `notebooks/` stores exploratory marimo notebooks when notebook artifacts are part of the work.
+- `src/`, `scripts/`, `tests/`, and `data/` are used as appropriate for reusable analysis infrastructure.
+
+Research work has three lanes:
+
+| Lane | Use for | Default routing |
+| --- | --- | --- |
+| Exploration | live human-researcher interaction, diagnostics, exploratory analysis, and figure prototyping | use `marimo-pair`; treat marimo as the interactive visualization and reasoning surface |
+| Implementation | reusable analysis code, pipelines, datasets, validators, and paper-supporting infrastructure | use the normal Ora et Labora issue, blueprint, worktree, verification, and PR flow |
+| Manuscript | LaTeX sources, prose, citations, Overleaf sync, PDF checks, and submission outputs | use paper/manuscript skills plus Ora et Labora state and verification discipline when the change is nontrivial |
+
+### Research Skill Routing
+
+| Need | Prefer |
+| --- | --- |
+| live exploratory notebook work with the human in the loop | `marimo-pair` |
+| reusable analysis infrastructure or paper-supporting code | normal Ora et Labora lifecycle skills |
+| LaTeX manuscript creation, template setup, or local PDF/render verification | `latex-document` when available |
+| Overleaf pull, push, sync, compile, `.bbl`, or arXiv output operations | `overleaf` when available; default to project IDs, dry runs, and non-destructive sync |
+| bounded academic prose drafting or revision through an external model | `research-writing-delegate` |
+| claim, framing, or scope decisions that should persist | `blueprint-guard`, `state-logging`, or a decision-tracking skill when available |
+
+Research profile rules:
+
+- Do not treat marimo notebooks as the canonical implementation layer. If exploratory logic becomes relied upon, promote it into reusable code, scripts, tests, logs, or manuscript artifacts.
+- Do not send a whole paper or oversized context packet to an external writing model by default. Use the smallest brief that can produce a useful draft.
+- Do not run a second external writing-generation pass or patch generated prose into the manuscript without first showing Codex's review and proposed next step to the user, unless the user explicitly enabled that automation for the task.
+- For Overleaf work, avoid propagating deletes unless explicitly approved, identify ambiguous projects by ID, and never expose session cookies or credentials in commands, logs, issues, or PR bodies.
+- Manuscript-impacting changes should be verified with the relevant LaTeX/PDF/render check when practical; record skipped checks and residual risk.
 
 ## End-To-End Lifecycle
 
@@ -277,6 +325,8 @@ Prefer scripts for deterministic file layout and template rendering.
 - "I will auto-merge the release PR into `main` because checks are green."
 - "I will publish `.project/` in a public repo because it is only process state."
 - "I will claim frontend verification without browser evidence."
+- "I will leave exploratory notebook logic as the only source of truth for a reusable research result."
+- "I will send an oversized paper dump to an external writing model or regenerate prose without the user's approval."
 - "I will paste complex markdown directly into `gh issue create`."
 - "I will use parallel Docker stacks without isolated ports and project names."
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Writing Delegate"
+  short_description: "Delegate bounded academic prose drafts"
+  default_prompt: "Use $research-writing-delegate to prepare a validated compact paper-writing brief, call the external model only after the right disclosure, and create a Codex review artifact before integration or user-approved regeneration."
