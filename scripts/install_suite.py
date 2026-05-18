@@ -19,6 +19,7 @@ SKILL_PATHS = [
     "skills/release-train",
     "skills/repo-init",
     "skills/repo-bootstrap",
+    "skills/linear-bridge",
 ]
 
 

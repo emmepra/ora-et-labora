@@ -43,6 +43,7 @@ Do not use this skill as a substitute for the detailed phase skills. If the task
 | `release-train` | promoting grouped work from `dev` to `main`, release PRs, release checks, and rollback notes |
 | `repo-init` | creating a new local or GitHub repo, choosing owner/org, visibility, repo type, source mode, and initial branch model |
 | `repo-bootstrap` | applying Ora et Labora templates, `.project/blueprint/`, CI/release placeholders, and conventions to an existing repo |
+| `linear-bridge` | connecting Linear issues/projects with GitHub issues, PRs, Ora et Labora execution state, and repo-local evidence |
 
 ## Project Profiles
 
@@ -93,6 +94,9 @@ Research profile rules:
 
 ## End-To-End Lifecycle
 
+0. Connect planning source when needed.
+   - Use `linear-bridge` when work starts from Linear or needs Linear updates.
+   - Keep Linear as planning/backlog; GitHub issues and PRs remain repo-local execution records.
 1. Shape the issue.
    - Use `issue-shaping`.
    - Produce a challenge record and issue body.
@@ -133,6 +137,7 @@ Research profile rules:
 - Run a blueprint fit check for every nontrivial issue before implementation starts.
 - Update `.project/blueprint/` only when durable project knowledge changes.
 - Keep logs delta-only. Do not restate information that already lives in GitHub or `CURRENT.md`.
+- When a Linear issue or project is the planning source, use `linear-bridge` to link Linear to the GitHub issue/PR and to comment high-signal decisions, blockers, and completion back to Linear. Do not replace `.project/logs` with Linear comments.
 - The normal lane uses one issue, one owning branch, one worktree, one local resumable task workspace, and one append-only log per nontrivial task. The epic lane and hotfix lane below are explicit overrides to this default. The epic lane replaces the old module-branch wording and must not revive the legacy module lifecycle.
 - Choose verification modalities based on the change type. Do not treat "tests" as a single generic step.
 - For frontend-impacting work, require browser verification locally and prefer CI browser coverage as well.
