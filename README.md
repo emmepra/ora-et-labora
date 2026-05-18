@@ -15,6 +15,7 @@ The suite is built around a simple idea:
 - treat browser evidence and Docker runtime behavior as first-class operational concerns
 - choose a public/private/internal artifact policy before publishing workflow state
 - route research projects through exploratory notebooks, reusable analysis code, paper artifacts, and manuscript operations without bypassing repo discipline
+- bridge Linear planning/backlog items to GitHub issues, PRs, and repo-local evidence without replacing Ora et Labora execution state
 - integrate normal work and completed epics into `dev`
 - release from `dev` to `main`
 
@@ -31,6 +32,8 @@ The key split is intentional: task-local execution state under `.project/todo/` 
 Implementation then happens inside the worktree, with verification driven by the type of change. Frontend work is not "tested" in the abstract; it is verified in the browser, with Playwright evidence collected into a stable repo-local log path. Docker-backed projects are handled with explicit worktree rules so switching branches does not turn into port collisions and stale containers.
 
 The branch flow is lane-based and PR-first. Normal work targets `dev`; epic work uses `epic/<slug>` plus an early draft PR to `dev`; urgent hotfixes target `main` first and then reconcile back to `dev`. Parallel epics are allowed, but they must stay rebased on `origin/dev`, and affected epics must rebase immediately when another epic merges or changes shared contracts. Implementation PRs may use agent auto-merge only after branch freshness, verification, CI/review, issue-closure, and state-logging gates are satisfied. Stable promotion happens through grouped `dev` to `main` release PRs, and release or hotfix PRs into `main` require explicit user approval before merge.
+
+Linear can sit above this flow as a planning and backlog surface. A Linear issue may later become one GitHub issue, several GitHub issues, or no GitHub issue at all. When work starts from Linear, use the bridge skill to read the Linear context, decide whether repo-local GitHub issue shaping is needed, link both directions, and comment high-signal PR, blocker, decision, verification, and completion updates back to Linear. Keep `.project/logs` as the repo-local execution evidence.
 
 Repo creation and bootstrap are visibility-aware. Private and internal repos can version durable `.project/` surfaces such as `.project/blueprint/` and concise `.project/logs/`, while keeping local task workspaces under `.project/todo/` local-only. Public repos keep `.project/` local by default and publish only sanitized contributor-facing docs and GitHub templates.
 
@@ -112,6 +115,7 @@ skills/release-train/       grouped dev-to-main release flow
 skills/repo-init/           new repo creation, owner/org, visibility, repo type
 skills/repo-bootstrap/      existing repo templates and workflow bootstrap
 skills/research-writing-delegate/ bounded external-model prose drafting for papers
+skills/linear-bridge/       Linear planning to GitHub/Ora execution linkage
 scripts/                    install, sync, and validation helpers
 examples/                   concrete end-to-end workflow examples
 .github/workflows/          repo-level validation workflow
@@ -129,6 +133,7 @@ The suite includes:
 - a governance helper that can plan or apply default repo settings and a standard issue label set
 - a cleanup helper that removes merged local task state and retires the owning worktree/local branch through a dry-run-first flow
 - a research-writing delegate helper that calls OpenRouter by default, with an OpenAI Responses API fallback, using versioned prompts, validated compact briefs, review artifacts, and structured output schemas
+- a Linear bridge skill for linking planning issues/projects to GitHub issues, PRs, decisions, blockers, verification, and completion updates
 - a CI gate that rejects malformed implementation or release PR bodies that do not satisfy the suite contract
 
 The operating procedure is intentionally inline in the skill files. Extra files are reserved for templates, scripts, bootstrap assets, tests, and examples.
@@ -156,6 +161,8 @@ The operating procedure is intentionally inline in the skill files. Extra files 
   - applies workflow templates and conventions to existing repositories
 - `research-writing-delegate`
   - delegates bounded academic prose drafts to an external model while preserving Codex review, user approval, and source discipline
+- `linear-bridge`
+  - connects Linear issues and projects to GitHub issues, PRs, Ora et Labora task state, and repo-local evidence without replacing `.project/logs`
 
 ## Install
 
@@ -174,7 +181,8 @@ python ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github
   skills/release-train \
   skills/repo-init \
   skills/repo-bootstrap \
-  skills/research-writing-delegate
+  skills/research-writing-delegate \
+  skills/linear-bridge
 ```
 
 Restart Codex after installation so the skill is discovered.

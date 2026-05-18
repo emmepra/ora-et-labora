@@ -24,3 +24,9 @@ Scope: applies to `personal/ora-et-labora/**`.
 - Epic work goes `dev` -> `epic/<slug>` with an early draft PR to `dev`; child issue PRs target the epic branch, and parallel epics must rebase on `origin/dev` after other epics merge or shared contracts change.
 - Hotfix work goes `main` -> `hotfix/<issue>-<slug>` -> PR to `main`, then must be reconciled back to `dev`.
 - Stable releases promote grouped `dev` work -> `main` through release PRs.
+
+## Linear Bridge
+
+- `linear-bridge` is an adapter skill, not a replacement for Ora et Labora execution phases.
+- Use it when Linear issues/projects need to be connected to GitHub issues, PRs, repo-local state, or `.project/logs` evidence.
+- Keep Linear as planning/backlog/status across projects; keep GitHub issues and PRs as repo-local implementation records; keep `.project/logs` as execution evidence.
